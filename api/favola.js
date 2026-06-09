@@ -14,7 +14,7 @@ ETA: "2-3 anni" frasi cortissime, parole semplici, molta ripetizione, ritmo cull
 
 LUNGHEZZA -> NUMERO DI SCENE: "cortissima"=4 scene, "media"=6 scene, "della buonanotte"=8 scene. Ogni scena 2-4 frasi (meno per i piccoli).
 
-IMMAGINI: per OGNI scena scegli UN "img" coerente col testo, SOLO da: ${OGGETTI.join(", ")}. Oppure "protagonista" per mostrare il personaggio. Se la scena parla di qualcosa NON in lista, NON inventare: usa l'oggetto piu vicino, oppure "protagonista".
+IMMAGINI: per OGNI scena scegli UN "img" coerente col testo, SOLO da: ${OGGETTI.join(", ")}. Oppure scegli la posa del protagonista usando "protagonista_POSA" dove POSA è UNA di: fermo, seduto, sorpreso, cammina, dorme, esulta. Scegli la posa coerente con cosa fa il personaggio in quella scena: se corre/si muove → cammina; se è felice/esulta → esulta; se dorme/è stanco → dorme; se è stupito/scopre qualcosa → sorpreso; se ascolta/riflette seduto → seduto; altrimenti → fermo. Se la scena parla di qualcosa NON in lista oggetti, NON inventare: usa la posa del protagonista.
 
 SFONDI: per OGNI scena scegli UNO "sfondo" coerente con DOVE accade, SOLO da: ${SFONDI.join(", ")} (in casa -> cameretta; cielo/sera/stelle -> notte o nuvole; in paese -> citta; tra alberi/prato -> bosco; acqua -> mare).
 
@@ -47,9 +47,16 @@ Ricorda: solo JSON, niente altro.`;
     txt = txt.replace(/^```json\s*/i, "").replace(/^```\s*/, "").replace(/```\s*$/, "").trim();
     let favola;
     try { favola = JSON.parse(txt); } catch (e) { res.status(500).json({ error: "parse", raw: txt }); return; }
+    const VALID_POSES = new Set(["fermo","seduto","sorpreso","cammina","dorme","esulta"]);
     const okImg = new Set([...OGGETTI, "protagonista"]);
     const okSf = new Set(SFONDI);
-    (favola.scene || []).forEach(s => { if (!okImg.has(s.img)) s.img = "protagonista"; if (!okSf.has(s.sfondo)) s.sfondo = "notte"; });
+    (favola.scene || []).forEach(s => {
+      if(s.img && s.img.startsWith("protagonista_")){
+        const p=s.img.replace("protagonista_","");
+        if(!VALID_POSES.has(p)) s.img="protagonista_fermo";
+      } else if (!okImg.has(s.img)) { s.img = "protagonista_fermo"; }
+      if (!okSf.has(s.sfondo)) s.sfondo = "notte";
+    });
     favola.chi = chi;
     res.status(200).json(favola);
   } catch (err) { res.status(500).json({ error: "server", detail: String(err) }); }
