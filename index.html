@@ -178,8 +178,11 @@ function renderRaccolta(){
     document.querySelectorAll(".fav-del").forEach(function(btn){btn.onclick=function(e){e.stopPropagation();var arr2=JSON.parse(localStorage.getItem("favole")||"[]");arr2.splice(parseInt(btn.dataset.i),1);localStorage.setItem("favole",JSON.stringify(arr2));updateCount();renderRaccolta();};});
   }catch(e){$("raccList").innerHTML='<div class="racc-empty">Errore nel caricare le favole.</div>';}
 }
-$("openRaccolta").onclick=function(){renderRaccolta();$("raccolta").classList.add("show");};
-$("closeRaccolta").onclick=function(){$("raccolta").classList.remove("show");};
+var idx=0,N=0,lastFav=null;
+document.addEventListener("click",function(e){
+  if(e.target.closest("#openRaccolta")){renderRaccolta();$("raccolta").classList.add("show");}
+  if(e.target.closest("#closeRaccolta")){$("raccolta").classList.remove("show");}
+});
 updateCount();
 function genera(){
   $("load").classList.add("show");
