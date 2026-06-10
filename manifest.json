@@ -1,0 +1,14 @@
+{
+  "name": "La Fabbrica delle Favole",
+  "short_name": "Fabbrica Favole",
+  "description": "Favole della buonanotte che si inventano ogni sera, su misura per il tuo bambino.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffdfb",
+  "theme_color": "#d4542a",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "images/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
