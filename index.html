@@ -51,7 +51,7 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
 .viewport{position:relative;width:100%;max-width:560px;height:100%;margin:0 auto;overflow:hidden;background:#fffdfb;box-shadow:0 0 50px rgba(0,0,0,.18);}
 .track{display:flex;height:100%;transition:transform .42s cubic-bezier(.6,.15,.2,1);}
 .page{min-width:100%;height:100%;position:relative;display:flex;flex-direction:column;background-color:#fffdfb;background-size:cover;background-position:top center;background-repeat:no-repeat;}
-.card{position:absolute;left:18px;right:18px;top:58px;bottom:48px;background:rgba(255,253,251,.46);border-radius:26px;box-shadow:0 4px 20px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 20px 18px;overflow-y:auto;}
+.page-card{position:absolute;left:18px;right:18px;top:58px;bottom:48px;background:rgba(255,253,251,.46);border-radius:26px;box-shadow:0 4px 20px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 20px 18px;overflow-y:auto;}
 .illu{width:100%;display:flex;justify-content:center;margin-bottom:14px;}
 .illu img{max-width:52%;max-height:32vh;object-fit:contain;filter:drop-shadow(0 5px 10px rgba(0,0,0,.1));}
 .ptxt{font-family:'Amatic SC',cursive;font-weight:700;font-size:26px;line-height:1.45;color:#39342c;text-align:center;width:100%;}
@@ -176,7 +176,7 @@ function render(fav){
   var scene=fav.scene||[];
   var cover='<div class="page cover" style="background-image:url('+SFDIR+(scene[0]&&scene[0].sfondo||"notte")+'.jpg)"><div class="ctit">'+(fav.titolo||"La favola")+'</div><img class="chero" src="'+heroImg+'"><div class="hint">tocca a destra per sfogliare ›</div></div>';
   var SFPOS={"notte":"top","nuvole":"top","bosco":"top","cameretta":"top","citta":"bottom","mare":"bottom"};
-  var pagine=scene.map(function(s){var img=poseImg(chi,s.img);var pos=SFPOS[s.sfondo]||"top";return '<div class="page" style="background-image:url('+SFDIR+s.sfondo+'.jpg);background-position:'+pos+' center"><div class="card"><div class="illu"><img src="'+img+'" onerror="this.onerror=null;this.src=\''+charImg(chi)+'\'"></div><div class="ptxt">'+s.testo+'</div></div></div>';}).join("");
+  var pagine=scene.map(function(s){var img=poseImg(chi,s.img);var pos=SFPOS[s.sfondo]||"top";return '<div class="page" style="background-image:url('+SFDIR+s.sfondo+'.jpg);background-position:'+pos+' center"><div class="page-card"><div class="illu"><img src="'+img+'" onerror="this.onerror=null;this.src=\''+charImg(chi)+'\'"></div><div class="ptxt">'+s.testo+'</div></div></div>';}).join("");
   var fine='<div class="page fine" style="background-image:url('+SFDIR+((scene[scene.length-1]&&scene[scene.length-1].sfondo)||"notte")+'.jpg)"><div class="ft">Fine 🌙</div><div class="bar"><div class="b go" id="altra">↻ Un\'altra</div><div class="b" id="salva">♥ Salva</div><div class="b" id="condividi">⬆ Condividi</div></div></div>';
   $("track").innerHTML=cover+pagine+fine;
   N=scene.length+2; idx=0;
