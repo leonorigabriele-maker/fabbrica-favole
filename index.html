@@ -168,7 +168,7 @@ $("cards").innerHTML=PERS.map(function(p){
   var inner;
   if(p.id==="sorpresa") inner='<span class="em">🎲</span>';
   else if(p.id==="bimbo") inner='<div class="dual-img"><img src="images/bimbo.png"><img src="images/bimba.png"></div>';
-  else inner='<img src="'+CHARDIR+p.id+'.png'">';
+  else inner='<img src="'+CHARDIR+p.id+'.png">';
   return '<button class="card" data-id="'+p.id+'">'+inner+'<span class="cn">'+p.nome+'</span><span class="cd">'+p.desc+'</span></button>';
 }).join("");
 function drawGrid(f){f=(f||"").toLowerCase();$("grid").innerHTML=OGGETTI.filter(function(o){return o.indexOf(f)>=0;}).map(function(o){return '<div class="obj" data-o="'+o+'"><img src="'+OBJDIR+o+'.png"><span>'+o+'</span></div>';}).join("");document.querySelectorAll(".obj").forEach(function(e){e.onclick=function(){$("cosa").value=e.dataset.o;document.querySelectorAll(".obj").forEach(function(x){x.classList.remove("on");});e.classList.add("on");};});}
