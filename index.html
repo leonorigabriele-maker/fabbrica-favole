@@ -76,7 +76,9 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
 .load .moon{font-size:50px;animation:sway 2s ease-in-out infinite;}
 .load p{font-family:'Comfortaa';color:#b08968;font-size:15px;}
 @keyframes sway{0%,100%{transform:translateY(0) rotate(-6deg);}50%{transform:translateY(-8px) rotate(6deg);}}
+.raccolta-btn{width:100%;margin-top:11px;cursor:pointer;border:1px solid #f0e8e0;font-family:'Comfortaa',sans-serif;font-weight:600;font-size:15px;color:#b08968;background:rgba(255,255,255,.7);border-radius:14px;padding:12px;}
 .banda-btn{width:100%;margin-top:9px;cursor:pointer;border:1px solid #f0e8e0;font-family:'Comfortaa',sans-serif;font-weight:600;font-size:15px;color:#b08968;background:rgba(255,255,255,.7);border-radius:14px;padding:12px;}
+.scopri-link{border:none;background:none;font-family:'Comfortaa',sans-serif;font-size:12px;color:#d4542a;cursor:pointer;padding:0;text-decoration:underline;}
 .qr-overlay{position:fixed;inset:0;z-index:58;background:#fffdfb;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:30px;}
 .qr-overlay.show{display:flex;}
 .qr-close{position:absolute;top:18px;right:18px;border:none;background:none;font-size:22px;color:#b08968;cursor:pointer;}
@@ -119,7 +121,7 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
   <div class="tit"><span class="cap">L</span>A <span class="cap">F</span>ABBRICA <span class="cap">D</span>ELLE <span class="cap">F</span>AVOLE</div>
   <div class="sub">storie che si inventano ogni sera</div>
   <svg class="rule" viewBox="0 0 200 10"><path d="M3 6 C 55 1,150 9,197 4" stroke="#e0602a" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
-  <div class="sec"><div class="seclabel">Chi vive la storia</div><div class="cards" id="cards"></div>
+  <div class="sec"><div class="seclabel">Chi vive la storia &nbsp;<button class="scopri-link" id="openBanda">✨ scopri la banda</button></div><div class="cards" id="cards"></div>
     <input class="input nome" id="nome" placeholder="il nome del tuo bimbo" maxlength="20"/></div>
   <div class="sec"><div class="seclabel">Una cosa di ogni giorno</div>
     <input class="input" id="cosa" placeholder="scrivi o cerca (anche: sbadiglio, silenzio...)" value="calzino"/>
@@ -129,7 +131,6 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
   <div class="sec"><div class="seclabel">Lunghezza</div><div class="pills" id="len"></div></div>
   <button class="cta" id="go">Inventa la favola</button>
   <button class="raccolta-btn" id="openRaccolta">📚 Le tue favole <span id="favCount"></span></button>
-  <button class="banda-btn" id="openBanda">✨ La banda — scopri i personaggi</button>
   <button class="banda-btn" id="btnCondividi" style="margin-top:9px;font-size:14px;color:#c8a878;" onclick="condividi()">⬆ Condividi l'app</button>
   
 </div>
