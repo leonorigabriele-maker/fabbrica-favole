@@ -24,17 +24,23 @@ OUTPUT: SOLO un JSON valido, senza testo intorno, senza markdown:
 export default async function handler(req, res) {
   if (req.method !== "POST") { res.status(405).json({ error: "Method not allowed" }); return; }
   try {
-    const { chi = "lalla", nome = "", cosa = "una cosa", atmosfera = "dolce", eta = "4-5 anni", lunghezza = "media" } = req.body || {};
+    const { chi = "lalla", nome = "", genere = "bimbo", cosa = "una cosa", atmosfera = "dolce", eta = "4-5 anni", lunghezza = "media" } = req.body || {};
     const NOMI = {lalla:"Lalla",tobia:"Tobia",nuvola:"Donna Nuvola",prof:"Professor Quandomai",mimi:"Mimì",nino:"Nino"};
-    const protagonista = chi === "bimbo" ? (nome || "il bambino") : (NOMI[chi] || "il bambino");
+    let protagonista;
+    if(chi === "bimbo"){
+      const articolo = genere === "bimba" ? "la bambina" : "il bambino";
+      protagonista = nome ? nome : articolo;
+    } else {
+      protagonista = NOMI[chi] || "il bambino";
+    }
 
     const userMsg = `Inventa una favola con questi ingredienti:
-- protagonista: ${protagonista}
+- protagonista: ${protagonista}${chi==="bimbo" ? " (genere: "+(genere||"bimbo")+")" : ""}
 - una cosa di ogni giorno: ${cosa}
 - atmosfera: ${atmosfera}
 - eta: ${eta}
 - lunghezza: ${lunghezza}
-Ricorda: solo JSON, niente altro.`;
+Usa pronomi e articoli corretti per il genere del protagonista. Ricorda: solo JSON, niente altro.`;
 
     const r = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
