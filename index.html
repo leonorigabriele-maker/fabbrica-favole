@@ -76,7 +76,11 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
 .load .moon{font-size:50px;animation:sway 2s ease-in-out infinite;}
 .load p{font-family:'Comfortaa';color:#b08968;font-size:15px;}
 @keyframes sway{0%,100%{transform:translateY(0) rotate(-6deg);}50%{transform:translateY(-8px) rotate(6deg);}}
-.raccolta-btn{width:100%;margin-top:11px;cursor:pointer;border:1px solid #f0e8e0;font-family:'Comfortaa',sans-serif;font-weight:600;font-size:15px;color:#6a5d4e;background:rgba(255,255,255,.7);border-radius:14px;padding:12px;}
+.dual-img{display:flex;gap:4px;align-items:center;justify-content:center;height:58px;}
+.dual-img img{width:28px;height:44px;object-fit:contain;}
+.genere-pills{display:flex;gap:8px;margin-top:8px;}
+.gpill{flex:1;cursor:pointer;font-family:'Lora';font-size:14px;color:#5a4d42;background:rgba(255,255,255,.92);border:1px solid #f0e8e0;border-radius:12px;padding:9px 6px;text-align:center;}
+.gpill.on{background:#d4542a;border-color:#d4542a;color:#fff;}margin-top:11px;cursor:pointer;border:1px solid #f0e8e0;font-family:'Comfortaa',sans-serif;font-weight:600;font-size:15px;color:#6a5d4e;background:rgba(255,255,255,.7);border-radius:14px;padding:12px;}
 .banda-btn{width:100%;margin-top:9px;cursor:pointer;border:1px solid #f0e8e0;font-family:'Comfortaa',sans-serif;font-weight:600;font-size:15px;color:#6a5d4e;background:rgba(255,255,255,.7);border-radius:14px;padding:12px;}
 .banda-banner{width:100%;cursor:pointer;background:rgba(212,84,42,.07);border:1.5px solid rgba(212,84,42,.22);border-radius:14px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .banda-banner .bb-hint{font-family:'Comfortaa',sans-serif;font-size:13px;color:#6a5d4e;}
@@ -126,7 +130,11 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
   <div class="sub">storie che si inventano ogni sera</div>
   <svg class="rule" viewBox="0 0 200 10"><path d="M3 6 C 55 1,150 9,197 4" stroke="#e0602a" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
   <div class="sec"><div class="seclabel">Chi vive la storia</div><div class="banda-banner" id="openBanda"><span class="bb-hint">Non sai chi scegliere?</span><span class="bb-cta">✨ Scopri la banda →</span></div><div class="cards" id="cards"></div>
-    <input class="input nome" id="nome" placeholder="il nome del tuo bimbo" maxlength="20"/></div>
+    <input class="input nome" id="nome" placeholder="il nome del tuo bambino" maxlength="20"/>
+    <div class="genere-pills" id="generePills" style="display:none;">
+      <button class="gpill on" data-g="bimbo">♂ Bimbo</button>
+      <button class="gpill" data-g="bimba">♀ Bimba</button>
+    </div></div>
   <div class="sec"><div class="seclabel">Una cosa di ogni giorno</div>
     <input class="input" id="cosa" placeholder="scrivi o cerca (anche: sbadiglio, silenzio...)" value="calzino"/>
     <div class="grid" id="grid"></div></div>
@@ -153,16 +161,33 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
 var CHARDIR="images/", OBJDIR="images/objects/", SFDIR="images/sfondi/";
 var PERS=[{id:"bimbo",nome:"Il tuo bimbo",desc:"il protagonista sei tu"},{id:"lalla",nome:"Lalla",desc:"fa domande impossibili"},{id:"tobia",nome:"Tobia",desc:"lascia tutto a metà"},{id:"nuvola",nome:"Donna Nuvola",desc:"fa mestieri impossibili"},{id:"prof",nome:"Professore",desc:"inventa oggetti assurdi"},{id:"mimi",nome:"Mimì",desc:"fa tutto al rovescio"},{id:"nino",nome:"Nino",desc:"sente parlare le cose"},{id:"sorpresa",nome:"Sorprendimi",desc:"scegli a caso"}];
 var OGGETTI=["luna","calzino","bottone","valigia","palloncino","stella","chiave","ombrello","cappello","barattolo","cucchiaio","libro","candela","sveglia","aquilone","cannocchiale","pera","gomitolo","conchiglia","fiocco","semaforo","albero","bicicletta","auto","letto","nuvola","sedia","porta","telefono","fiore"];
-var S={chi:"lalla",atm:"dolce",eta:"4-5 anni",len:"media"};
+var S={chi:"lalla",atm:"dolce",eta:"4-5 anni",len:"media",genere:"bimbo"};
 var $=function(id){return document.getElementById(id);};
-function charImg(id){return CHARDIR+(id==="bimbo"?"bimbo":id)+".png";}
-$("cards").innerHTML=PERS.map(function(p){var inner=(p.id==="sorpresa")?'<span class="em">🎲</span>':'<img src="'+charImg(p.id)+'">';return '<button class="card" data-id="'+p.id+'">'+inner+'<span class="cn">'+p.nome+'</span><span class="cd">'+p.desc+'</span></button>';}).join("");
+function charImg(id){return CHARDIR+(id==="bimbo"?(S.genere||"bimbo"):id)+".png";}
+$("cards").innerHTML=PERS.map(function(p){
+  var inner;
+  if(p.id==="sorpresa") inner='<span class="em">🎲</span>';
+  else if(p.id==="bimbo") inner='<div class="dual-img"><img src="images/bimbo.png"><img src="images/bimba.png"></div>';
+  else inner='<img src="'+CHARDIR+p.id+'.png'">';
+  return '<button class="card" data-id="'+p.id+'">'+inner+'<span class="cn">'+p.nome+'</span><span class="cd">'+p.desc+'</span></button>';
+}).join("");
 function drawGrid(f){f=(f||"").toLowerCase();$("grid").innerHTML=OGGETTI.filter(function(o){return o.indexOf(f)>=0;}).map(function(o){return '<div class="obj" data-o="'+o+'"><img src="'+OBJDIR+o+'.png"><span>'+o+'</span></div>';}).join("");document.querySelectorAll(".obj").forEach(function(e){e.onclick=function(){$("cosa").value=e.dataset.o;document.querySelectorAll(".obj").forEach(function(x){x.classList.remove("on");});e.classList.add("on");};});}
 drawGrid("");
 var PILLS={atm:["dolce","buffa","poetica"],eta:["2-3 anni","4-5 anni","6-7 anni"],len:["cortissima","media","della buonanotte"]};
 ["atm","eta","len"].forEach(function(k){$(k).innerHTML=PILLS[k].map(function(a){return '<button class="pill" data-v="'+a+'">'+a+'</button>';}).join("");});
-function refresh(){document.querySelectorAll("#cards .card").forEach(function(e){e.classList.toggle("on",e.dataset.id===S.chi);});["atm","eta","len"].forEach(function(k){$(k).querySelectorAll(".pill").forEach(function(e){e.classList.toggle("on",e.dataset.v===S[k]);});});$("nome").style.display=(S.chi==="bimbo")?"block":"none";}
+function refresh(){
+  document.querySelectorAll("#cards .card").forEach(function(e){e.classList.toggle("on",e.dataset.id===S.chi);});
+  ["atm","eta","len"].forEach(function(k){$(k).querySelectorAll(".pill").forEach(function(e){e.classList.toggle("on",e.dataset.v===S[k]);});});
+  var isBimbo=(S.chi==="bimbo");
+  $("nome").style.display=isBimbo?"block":"none";
+  $("generePills").style.display=isBimbo?"flex":"none";
+  if(isBimbo){
+    $("nome").placeholder="il nome del tuo "+(S.genere==="bimba"?"bambina":"bambino");
+    document.querySelectorAll("#generePills .gpill").forEach(function(e){e.classList.toggle("on",e.dataset.g===S.genere);});
+  }
+}
 document.querySelectorAll("#cards .card").forEach(function(e){e.onclick=function(){S.chi=e.dataset.id;refresh();};});
+document.querySelectorAll("#generePills .gpill").forEach(function(e){e.onclick=function(){S.genere=e.dataset.g;refresh();};});
 ["atm","eta","len"].forEach(function(k){$(k).querySelectorAll(".pill").forEach(function(e){e.onclick=function(){S[k]=e.dataset.v;refresh();};});});
 $("cosa").oninput=function(e){drawGrid(e.target.value);};
 refresh();
@@ -260,7 +285,7 @@ document.addEventListener("click",function(e){
 updateCount();
 function genera(){
   $("load").classList.add("show");
-  var body={chi:S.chi,nome:$("nome").value.trim(),cosa:($("cosa").value.trim()||"una cosa"),atmosfera:S.atm,eta:S.eta,lunghezza:S.len};
+  var body={chi:S.chi,nome:$("nome").value.trim(),genere:S.genere,cosa:($("cosa").value.trim()||"una cosa"),atmosfera:S.atm,eta:S.eta,lunghezza:S.len};
   fetch("/api/favola",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)})
    .then(function(r){return r.json();})
    .then(function(fav){$("load").classList.remove("show");if(!fav.scene){throw new Error(fav.error||"vuota");}lastFav=fav;render(fav);$("book").classList.add("show");})
