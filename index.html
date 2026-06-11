@@ -26,7 +26,7 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
 .sub{font-family:'Amatic SC',cursive;font-weight:700;text-transform:uppercase;letter-spacing:3px;font-size:18px;color:#8c8175;margin-top:2px;text-align:center;}
 .rule{display:block;margin:8px auto 2px;width:200px;height:10px;}
 .sec{margin-top:22px;}
-.seclabel{font-family:'Jost',sans-serif;text-transform:uppercase;letter-spacing:3px;font-size:12px;color:#b08968;margin-bottom:11px;}
+.seclabel{font-family:'Jost',sans-serif;text-transform:uppercase;letter-spacing:3px;font-size:12px;color:#7a5e48;margin-bottom:11px;}
 .cards{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:9px;}
 .card{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 5px 11px;background:rgba(255,255,255,.92);border:1px solid #f0e8e0;border-radius:16px;transition:all .15s;}
 .card.on{border-color:#e0a06a;box-shadow:0 6px 16px rgba(200,140,80,.18);}
@@ -43,8 +43,8 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
 .obj img{width:42px;height:42px;object-fit:contain;}
 .obj span{font-size:9px;color:#9a8b78;font-family:'Comfortaa';}
 .pills{display:flex;gap:8px;flex-wrap:wrap;}
-.pill{flex:1;min-width:80px;cursor:pointer;font-family:'Lora';font-size:14px;color:#8c8175;background:rgba(255,255,255,.92);border:1px solid #f0e8e0;border-radius:12px;padding:10px 6px;text-align:center;}
-.pill.on{background:#e8956a;border-color:#e8956a;color:#fff;}
+.pill{flex:1;min-width:80px;cursor:pointer;font-family:'Lora';font-size:14px;color:#5a4d42;background:rgba(255,255,255,.92);border:1px solid #f0e8e0;border-radius:12px;padding:10px 6px;text-align:center;}
+.pill.on{background:#d4542a;border-color:#d4542a;color:#fff;}
 .cta{width:100%;margin-top:24px;cursor:pointer;border:none;font-family:'Comfortaa',sans-serif;font-weight:600;font-size:19px;color:#fff;background:#d4542a;border-radius:16px;padding:15px;box-shadow:0 10px 24px rgba(212,84,42,.26);}
 .book{position:fixed;inset:0;z-index:50;display:none;}
 .book.show{display:block;}
@@ -76,9 +76,13 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
 .load .moon{font-size:50px;animation:sway 2s ease-in-out infinite;}
 .load p{font-family:'Comfortaa';color:#b08968;font-size:15px;}
 @keyframes sway{0%,100%{transform:translateY(0) rotate(-6deg);}50%{transform:translateY(-8px) rotate(6deg);}}
-.raccolta-btn{width:100%;margin-top:11px;cursor:pointer;border:1px solid #f0e8e0;font-family:'Comfortaa',sans-serif;font-weight:600;font-size:15px;color:#b08968;background:rgba(255,255,255,.7);border-radius:14px;padding:12px;}
-.banda-btn{width:100%;margin-top:9px;cursor:pointer;border:1px solid #f0e8e0;font-family:'Comfortaa',sans-serif;font-weight:600;font-size:15px;color:#b08968;background:rgba(255,255,255,.7);border-radius:14px;padding:12px;}
+.raccolta-btn{width:100%;margin-top:11px;cursor:pointer;border:1px solid #f0e8e0;font-family:'Comfortaa',sans-serif;font-weight:600;font-size:15px;color:#6a5d4e;background:rgba(255,255,255,.7);border-radius:14px;padding:12px;}
+.banda-btn{width:100%;margin-top:9px;cursor:pointer;border:1px solid #f0e8e0;font-family:'Comfortaa',sans-serif;font-weight:600;font-size:15px;color:#6a5d4e;background:rgba(255,255,255,.7);border-radius:14px;padding:12px;}
+.banda-banner{width:100%;cursor:pointer;background:rgba(212,84,42,.07);border:1.5px solid rgba(212,84,42,.22);border-radius:14px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.banda-banner .bb-hint{font-family:'Comfortaa',sans-serif;font-size:13px;color:#6a5d4e;}
+.banda-banner .bb-cta{font-family:'Amatic SC',cursive;font-weight:700;font-size:22px;color:#d4542a;white-space:nowrap;}
 .scopri-link{border:none;background:none;font-family:'Comfortaa',sans-serif;font-size:12px;color:#d4542a;cursor:pointer;padding:0;text-decoration:underline;}
+.bg img{position:absolute;filter:saturate(1.8) brightness(0.88);}
 .qr-overlay{position:fixed;inset:0;z-index:58;background:#fffdfb;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:30px;}
 .qr-overlay.show{display:flex;}
 .qr-close{position:absolute;top:18px;right:18px;border:none;background:none;font-size:22px;color:#b08968;cursor:pointer;}
@@ -121,7 +125,7 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
   <div class="tit"><span class="cap">L</span>A <span class="cap">F</span>ABBRICA <span class="cap">D</span>ELLE <span class="cap">F</span>AVOLE</div>
   <div class="sub">storie che si inventano ogni sera</div>
   <svg class="rule" viewBox="0 0 200 10"><path d="M3 6 C 55 1,150 9,197 4" stroke="#e0602a" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
-  <div class="sec"><div class="seclabel">Chi vive la storia &nbsp;<button class="scopri-link" id="openBanda">✨ scopri la banda</button></div><div class="cards" id="cards"></div>
+  <div class="sec"><div class="seclabel">Chi vive la storia</div><div class="banda-banner" id="openBanda"><span class="bb-hint">Non sai chi scegliere?</span><span class="bb-cta">✨ Scopri la banda →</span></div><div class="cards" id="cards"></div>
     <input class="input nome" id="nome" placeholder="il nome del tuo bimbo" maxlength="20"/></div>
   <div class="sec"><div class="seclabel">Una cosa di ogni giorno</div>
     <input class="input" id="cosa" placeholder="scrivi o cerca (anche: sbadiglio, silenzio...)" value="calzino"/>
@@ -131,7 +135,7 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
   <div class="sec"><div class="seclabel">Lunghezza</div><div class="pills" id="len"></div></div>
   <button class="cta" id="go">Inventa la favola</button>
   <button class="raccolta-btn" id="openRaccolta">📚 Le tue favole <span id="favCount"></span></button>
-  <button class="banda-btn" id="btnCondividi" style="margin-top:9px;font-size:14px;color:#c8a878;" onclick="condividi()">⬆ Condividi l'app</button>
+  <button class="banda-btn" id="btnCondividi" style="margin-top:9px;font-size:14px;color:#7a5e48;">⬆ Condividi l'app</button>
   
 </div>
 <div class="load" id="load"><div class="moon">🌙</div><p>Sto inventando la favola…</p></div>
@@ -205,13 +209,22 @@ function renderRaccolta(){
     document.querySelectorAll(".fav-del").forEach(function(btn){btn.onclick=function(e){e.stopPropagation();var arr2=JSON.parse(localStorage.getItem("favole")||"[]");arr2.splice(parseInt(btn.dataset.i),1);localStorage.setItem("favole",JSON.stringify(arr2));updateCount();renderRaccolta();};});
   }catch(e){$("raccList").innerHTML='<div class="racc-empty">Errore nel caricare le favole.</div>';}
 }
-function condividi(){
-  var title="La Fabbrica delle Favole";
-  var text=lastFav?'Ho letto questa favola: "'+lastFav.titolo+'" — favole della buonanotte su misura per i bambini':'Favole della buonanotte su misura per il tuo bambino';
+function copyLink(){
   var url="https://fabbrica-favole.vercel.app";
-  if(navigator.share){navigator.share({title:title,text:text,url:url}).catch(function(){});}
-  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){alert("Link copiato!");});}
-  else{prompt("Copia il link:",url);}
+  var btn=$("btnCondividi");
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){
+      if(btn){var orig=btn.textContent;btn.textContent="✓ Link copiato!";setTimeout(function(){btn.textContent=orig;},2200);}
+    }).catch(function(){prompt("Copia il link:",url);});
+  } else {prompt("Copia il link:",url);}
+}
+function condividi(){
+  var url="https://fabbrica-favole.vercel.app";
+  var btn=$("btnCondividi")||$("condividi");
+  if(navigator.share){
+    navigator.share({title:"La Fabbrica delle Favole",text:"Favole della buonanotte illustrate, su misura per il tuo bambino.",url:url})
+      .catch(function(){copyLink();});
+  } else {copyLink();}
 }
 var BANDA_DATA=[
  {id:"bimbo",nome:"Il tuo bimbo",colore:"#d4542a",desc:"il protagonista di ogni storia",storia:"Ogni favola comincia da lui — o da lei. Il nome lo scegli tu, e da quel momento è davvero la sua storia."},
@@ -242,6 +255,7 @@ document.addEventListener("click",function(e){
   if(e.target.closest("#closeQr")){$("qrOverlay").classList.remove("show");}
   if(e.target.closest("#printQr")){window.print();}
   if(e.target.closest("#condividi")){condividi();}
+  if(e.target.closest("#btnCondividi")){condividi();}
 });
 updateCount();
 function genera(){
