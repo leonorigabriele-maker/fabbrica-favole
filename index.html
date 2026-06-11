@@ -167,7 +167,7 @@ function charImg(id){return CHARDIR+(id==="bimbo"?(S.genere||"bimbo"):id)+".png"
 $("cards").innerHTML=PERS.map(function(p){
   var inner;
   if(p.id==="sorpresa") inner='<span class="em">🎲</span>';
-  else if(p.id==="bimbo") inner='<div class="dual-img"><img src="images/bimbo.png"><img src="images/bimba.png"></div>';
+  else if(p.id==="bimbo") inner='<img id="bimboCardImg" src="images/bimbo.png">';
   else inner='<img src="'+CHARDIR+p.id+'.png">';
   return '<button class="card" data-id="'+p.id+'">'+inner+'<span class="cn">'+p.nome+'</span><span class="cd">'+p.desc+'</span></button>';
 }).join("");
@@ -181,8 +181,10 @@ function refresh(){
   var isBimbo=(S.chi==="bimbo");
   $("nome").style.display=isBimbo?"block":"none";
   $("generePills").style.display=isBimbo?"flex":"none";
+  var cardImg=$("bimboCardImg");
+  if(cardImg) cardImg.src="images/"+(S.genere||"bimbo")+".png";
   if(isBimbo){
-    $("nome").placeholder="il nome del tuo "+(S.genere==="bimba"?"bambina":"bambino");
+    $("nome").placeholder="il nome del tuo "+(S.genere==="bimba"?"bambino":"bambino");
     document.querySelectorAll("#generePills .gpill").forEach(function(e){e.classList.toggle("on",e.dataset.g===S.genere);});
   }
 }
