@@ -14,6 +14,8 @@
 <meta property="og:image" content="https://fabbrica-favole.vercel.app/images/og-image.png">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Comfortaa:wght@400;500;600&family=Jost:wght@300;400&family=Quicksand:wght@400;500;600&family=Lora:ital@0;1&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -281,13 +283,79 @@ function copyLink(){
     }).catch(function(){prompt("Copia il link:",url);});
   } else {prompt("Copia il link:",url);}
 }
+function condividiFallback(){
+  var url="https://fabbrica-favole.vercel.app";
+  var hasFavola=(typeof lastFav!=="undefined"&&lastFav&&lastFav.titolo&&lastFav.scene&&lastFav.scene.length);
+  if(hasFavola){
+    var testo=lastFav.titolo+"\n\n";
+    lastFav.scene.forEach(function(s){testo+=s.testo+"\n\n";});
+    testo+="\u2014\nScopri La Fabbrica delle Favole: "+url;
+    if(navigator.share){navigator.share({title:lastFav.titolo,text:testo}).catch(function(){});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(testo);}
+    else{prompt("Copia la favola:",testo);}
+  } else {
+    if(navigator.share){navigator.share({title:"La Fabbrica delle Favole",text:"Favole della buonanotte illustrate, su misura per il tuo bambino.",url:url}).catch(function(){copyLink();});}
+    else{copyLink();}
+  }
+}
 function condividi(){
   var url="https://fabbrica-favole.vercel.app";
-  var btn=$("btnCondividi")||$("condividi");
-  if(navigator.share){
-    navigator.share({title:"La Fabbrica delle Favole",text:"Favole della buonanotte illustrate, su misura per il tuo bambino.",url:url})
-      .catch(function(){copyLink();});
-  } else {copyLink();}
+  var hasFavola=(typeof lastFav!=="undefined"&&lastFav&&lastFav.titolo&&lastFav.scene&&lastFav.scene.length);
+  if(!hasFavola||typeof html2canvas==="undefined"||typeof window.jspdf==="undefined"){condividiFallback();return;}
+  var btn=document.getElementById("condividi");
+  var origTxt=btn?btn.textContent:"";
+  if(btn){btn.textContent="📄 ...";btn.style.opacity=".6";}
+  var pages=document.querySelectorAll(".track .page");
+  var scenePages=[];
+  pages.forEach(function(p,i){
+    if(i>0&&i<pages.length-1) scenePages.push(p);
+  });
+  if(!scenePages.length){if(btn){btn.textContent=origTxt;btn.style.opacity="";}condividiFallback();return;}
+  var jsPDF=window.jspdf.jsPDF;
+  var pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a5"});
+  var pw=pdf.internal.pageSize.getWidth();
+  var ph=pdf.internal.pageSize.getHeight();
+  var processed=0;
+  function processPage(pageEl,pageNum,total,cb){
+    html2canvas(pageEl,{
+      useCORS:true,allowTaint:true,scale:2,backgroundColor:"#fffdfb",logging:false,
+      onclone:function(doc){
+        var els=doc.querySelectorAll(".arrow,.close,.dots,.bar");
+        els.forEach(function(e){e.style.display="none";});
+      }
+    }).then(function(canvas){
+      var imgData=canvas.toDataURL("image/jpeg",0.92);
+      var cw=canvas.width,ch=canvas.height;
+      var ratio=Math.min(pw/cw*100,ph/ch*100);
+      var iw=cw*ratio/100,ih=ch*ratio/100;
+      var x=(pw-iw)/2,y=(ph-ih)/2;
+      if(pageNum>0) pdf.addPage();
+      pdf.addImage(imgData,"JPEG",x,y,iw,ih);
+      cb();
+    }).catch(function(){cb();});
+  }
+  function runAll(i){
+    if(i>=scenePages.length){
+      if(btn){btn.textContent=origTxt;btn.style.opacity="";}
+      var pdfBlob=pdf.output("blob");
+      var fname=(lastFav.titolo||"favola").replace(/[^a-z0-9]/gi,"_")+".pdf";
+      var file=new File([pdfBlob],fname,{type:"application/pdf"});
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+        navigator.share({title:lastFav.titolo,text:"Scopri La Fabbrica delle Favole: "+url,files:[file]})
+          .catch(function(){
+            var a=document.createElement("a");a.href=URL.createObjectURL(pdfBlob);a.download=fname;a.click();
+            setTimeout(function(){URL.revokeObjectURL(a.href);},5000);
+          });
+      } else {
+        var a=document.createElement("a");a.href=URL.createObjectURL(pdfBlob);a.download=fname;a.click();
+        setTimeout(function(){URL.revokeObjectURL(a.href);},5000);
+      }
+      return;
+    }
+    if(btn) btn.textContent="📄 "+(i+1)+"/"+scenePages.length;
+    processPage(scenePages[i],i,scenePages.length,function(){runAll(i+1);});
+  }
+  runAll(0);
 }
 var BANDA_DATA=[
  {id:"bimbo",nome:"Il tuo bimbo",colore:"#d4542a",desc:"il protagonista di ogni storia",storia:"Ogni favola comincia da lui — o da lei. Il nome lo scegli tu, e da quel momento è davvero la sua storia."},
