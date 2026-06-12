@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="it"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
 <title>La Fabbrica delle Favole</title>
-<meta name="description" content="Favole della buonanotte che si inventano ogni sera, su misura per il tuo bambino. Illustrate a mano.">
+<meta name="description" content="Inventa una favola su misura per il tuo bambino, ogni sera. Scegli i personaggi e lascia che la magia faccia il resto.">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#d4542a">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -10,7 +10,7 @@
 <link rel="icon" type="image/png" href="images/icon-512.png">
 <link rel="apple-touch-icon" href="images/icon-180.png">
 <meta property="og:title" content="La Fabbrica delle Favole">
-<meta property="og:description" content="Favole della buonanotte che si inventano ogni sera, su misura per il tuo bambino.">
+<meta property="og:description" content="Inventa una favola su misura per il tuo bambino, ogni sera. Scegli i personaggi e lascia che la magia faccia il resto.">
 <meta property="og:image" content="https://fabbrica-favole.vercel.app/images/og-image.png">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
@@ -147,6 +147,41 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
   <button class="banda-btn" id="btnCondividi" style="margin-top:9px;font-size:14px;color:#7a5e48;">⬆ Condividi l'app</button>
   
 </div>
+
+<!-- BANNER INSTALLA (Android) -->
+<div id="installBanner" style="position:fixed;bottom:0;left:0;right:0;z-index:49;background:#fffdfb;border-top:2.5px solid #f5c842;padding:18px 20px 32px;max-width:560px;margin:0 auto;display:none;flex-direction:column;gap:14px;box-shadow:0 -4px 24px rgba(0,0,0,.08);">
+  <div style="display:flex;align-items:flex-start;gap:14px;">
+    <div style="flex-shrink:0;margin-top:3px;">
+      <svg width="40" height="40" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
+        <defs><clipPath id="ib1"><circle cx="38" cy="44" r="36"/></clipPath></defs>
+        <circle cx="38" cy="44" r="36" fill="#f5c842"/>
+        <circle cx="54" cy="36" r="29" fill="#fffdfb" clip-path="url(#ib1)"/>
+        <circle cx="72" cy="20" r="3" fill="#d4542a" opacity=".7"/>
+        <circle cx="66" cy="11" r="2" fill="#f5c842" opacity=".8"/>
+      </svg>
+    </div>
+    <div>
+      <div style="font-family:'Amatic SC',cursive;font-weight:700;color:#2e2b27;font-size:22px;line-height:1;margin-bottom:5px;"><span style="font-size:29px">T</span>ENILA A PORTATA DI MANO</div>
+      <div style="font-family:'Comfortaa',sans-serif;font-size:12px;color:#7a6a5a;line-height:1.55;">Aggiungila alla schermata home &mdash; si apre come un&rsquo;app, senza scaricare niente.</div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <button id="installBtn" style="background:#2e2b27;color:#f5d4c0;font-family:'Comfortaa',sans-serif;font-weight:600;font-size:14px;border:none;border-radius:12px;padding:13px 16px;text-align:center;cursor:pointer;width:100%;">Aggiungi alla schermata home</button>
+    <button id="installNo" style="background:transparent;color:#a08060;font-family:'Comfortaa',sans-serif;font-size:11px;border:none;padding:4px;text-align:center;cursor:pointer;width:100%;">adesso no, grazie</button>
+  </div>
+</div>
+
+<!-- GUIDA IPHONE -->
+<div id="iphoneGuide" style="position:fixed;bottom:0;left:0;right:0;z-index:49;background:#fffdfb;border-top:2.5px solid #f5c842;padding:18px 20px 36px;max-width:560px;margin:0 auto;display:none;flex-direction:column;gap:16px;box-shadow:0 -4px 24px rgba(0,0,0,.08);">
+  <div style="font-family:'Amatic SC',cursive;font-weight:700;color:#d4542a;font-size:24px;line-height:1;text-align:center;"><span style="font-size:32px">T</span>ENILA A PORTATA DI MANO</div>
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    <div style="display:flex;align-items:center;gap:12px;background:#f8f4ef;border-radius:12px;padding:11px 14px;"><div style="font-family:'Amatic SC',cursive;font-weight:700;font-size:26px;color:#d4542a;min-width:22px;text-align:center;">1</div><div style="font-family:'Comfortaa',sans-serif;font-size:12px;color:#5a4d42;line-height:1.45;">Tocca l&rsquo;icona <strong>Condividi</strong> in basso nel browser (il quadrato con la freccia &uarr;)</div></div>
+    <div style="display:flex;align-items:center;gap:12px;background:#f8f4ef;border-radius:12px;padding:11px 14px;"><div style="font-family:'Amatic SC',cursive;font-weight:700;font-size:26px;color:#d4542a;min-width:22px;text-align:center;">2</div><div style="font-family:'Comfortaa',sans-serif;font-size:12px;color:#5a4d42;line-height:1.45;">Scorri e tocca <strong>&ldquo;Aggiungi a Home&rdquo;</strong></div></div>
+    <div style="display:flex;align-items:center;gap:12px;background:#f8f4ef;border-radius:12px;padding:11px 14px;"><div style="font-family:'Amatic SC',cursive;font-weight:700;font-size:26px;color:#d4542a;min-width:22px;text-align:center;">3</div><div style="font-family:'Comfortaa',sans-serif;font-size:12px;color:#5a4d42;line-height:1.45;">Tocca <strong>Aggiungi</strong> &mdash; la luna apparir&agrave; tra le tue app &#127769;</div></div>
+  </div>
+  <button id="iphoneGuideNo" style="background:transparent;color:#a08060;font-family:'Comfortaa',sans-serif;font-size:11px;border:none;padding:4px;text-align:center;cursor:pointer;width:100%;">ho capito, grazie</button>
+</div>
+
 <div class="load" id="load"><div class="moon">🌙</div><p>Sto inventando la favola…</p></div>
 <div class="err" id="err"><div style="font-size:40px">😴</div><p id="errmsg" style="font-family:Comfortaa;color:#8c7355"></p><button class="b" style="max-width:200px" onclick="document.getElementById('err').classList.remove('show')">riprova</button></div>
 <div class="book" id="book">
@@ -296,6 +331,37 @@ function genera(){
 }
 $("go").onclick=genera;
 [["azzurro",-7,-3,150,15],["rosa",83,5,135,-20],["giallo",-8,30,140,40]].forEach(function(a){var im=document.createElement("img");im.src="images/splatter/"+a[0]+".png";im.style.left=a[1]+"%";im.style.top=a[2]+"%";im.style.width=a[3]+"px";im.style.transform="rotate("+a[4]+"deg)";im.onerror=function(){this.remove();};$("cornerbg").appendChild(im);});
+
+/* ===== BANNER INSTALLA PWA ===== */
+(function(){
+  var CHIAVE="fdf_install_dismissed";
+  if(localStorage.getItem(CHIAVE)) return;
+  var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  var isStandalone=(window.navigator.standalone===true)||window.matchMedia("(display-mode: standalone)").matches;
+  if(isStandalone) return;
+  var deferredPrompt=null;
+  window.addEventListener("beforeinstallprompt",function(e){
+    e.preventDefault();deferredPrompt=e;
+    setTimeout(function(){var b=document.getElementById("installBanner");if(b)b.style.display="flex";},2000);
+  });
+  if(isIOS){setTimeout(function(){var b=document.getElementById("iphoneGuide");if(b)b.style.display="flex";},2000);}
+  var installBtn=document.getElementById("installBtn");
+  if(installBtn){installBtn.onclick=function(){
+    var b=document.getElementById("installBanner");if(b)b.style.display="none";
+    if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;});}
+    localStorage.setItem(CHIAVE,"1");
+  };}
+  var installNo=document.getElementById("installNo");
+  if(installNo){installNo.onclick=function(){
+    var b=document.getElementById("installBanner");if(b)b.style.display="none";
+    localStorage.setItem(CHIAVE,"1");
+  };}
+  var iphoneNo=document.getElementById("iphoneGuideNo");
+  if(iphoneNo){iphoneNo.onclick=function(){
+    var b=document.getElementById("iphoneGuide");if(b)b.style.display="none";
+    localStorage.setItem(CHIAVE,"1");
+  };}
+})();
 </script>
 <div class="qr-overlay" id="qrOverlay">
   <button class="qr-close" id="closeQr">✕</button>
