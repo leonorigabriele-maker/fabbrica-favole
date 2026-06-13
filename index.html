@@ -308,7 +308,7 @@ function condividi(){
   var pages=document.querySelectorAll(".track .page");
   var scenePages=[];
   pages.forEach(function(p,i){
-    if(i>0&&i<pages.length-1) scenePages.push(p);
+    scenePages.push(p);
   });
   if(!scenePages.length){if(btn){btn.textContent=origTxt;btn.style.opacity="";}condividiFallback();return;}
   var jsPDF=window.jspdf.jsPDF;
