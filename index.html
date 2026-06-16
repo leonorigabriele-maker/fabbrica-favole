@@ -159,7 +159,7 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
     </div></div>
   <div class="sec"><div class="seclabel"><span class="step-num">2</span>SCEGLI UN OGGETTO</div>
     <input class="input" id="cosa" placeholder="scrivi o cerca (anche: sbadiglio, silenzio...)" value="calzino"/>
-    <div class="grid-wrap"><div class="grid" id="grid"></div><div class="grid-fade"></div></div></div>
+    <div class="grid-wrap"><div class="grid" id="grid"></div><div class="grid-fade"></div><div style="position:absolute;bottom:5px;right:10px;font-size:11px;color:#c0b0a0;letter-spacing:2px;pointer-events:none;z-index:3;">···</div></div></div>
   <div class="sec"><div class="seclabel"><span class="step-num">3</span>ATMOSFERA, ETÀ E LUNGHEZZA</div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:start;">
     <div>
@@ -177,7 +177,11 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
   </div>
 </div>
   <button class="cta" id="go">✨ Inventa la favola</button>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px;"><button class="raccolta-btn" id="openRaccolta" style="margin-top:0;">📚 Le tue favole <span id="favCount"></span></button><button class="banda-btn" id="btnCondividi" style="margin-top:0;font-size:13px;color:#7a5e48;">⬆ Condividi l'app</button></div>
+  <button class="raccolta-btn" id="openRaccolta" style="margin-top:11px;">📚 Le tue favole <span id="favCount"></span></button>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px;">
+    <button class="raccolta-btn" id="btnAccediHome" style="margin-top:0;font-size:13px;color:#7a5e48;">👤 Accedi</button>
+    <button class="raccolta-btn" id="btnCondividi" style="margin-top:0;font-size:13px;color:#7a5e48;">⬆ Condividi l'app</button>
+  </div>
   
 </div>
 
@@ -217,6 +221,14 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
 
 <div class="load" id="load"><div class="moon">🌙</div><p>Sto inventando la favola…</p></div>
 <div class="err" id="err"><div style="font-size:40px">😴</div><p id="errmsg" style="font-family:Comfortaa;color:#8c7355"></p><button class="b" style="max-width:200px" onclick="document.getElementById('err').classList.remove('show')">riprova</button></div>
+<!-- BANNER LOGIN PAGINA FINE -->
+<div id="fineLoginBanner" style="display:none;position:fixed;bottom:110px;left:50%;transform:translateX(-50%);width:calc(100% - 36px);max-width:524px;background:rgba(255,253,251,.96);border:1.5px solid rgba(212,84,42,.22);border-radius:14px;padding:14px 16px;z-index:51;flex-direction:column;align-items:center;gap:8px;text-align:center;">
+  <div style="font-family:'Amatic SC',cursive;font-weight:700;font-size:20px;color:#d4542a;line-height:1;">Ti è piaciuta?</div>
+  <div style="font-family:'Comfortaa',sans-serif;font-size:10px;color:#7a6a5a;line-height:1.5;">Accedi per salvare le favole su tutti i dispositivi</div>
+  <button id="btnAccediFine" style="background:#2e2b27;color:#f5d4c0;font-family:'Comfortaa',sans-serif;font-size:12px;font-weight:600;border:none;border-radius:10px;padding:10px 16px;cursor:pointer;width:100%;">Accedi con Google</button>
+  <button id="btnSkipFine" style="background:none;border:none;font-family:'Comfortaa',sans-serif;font-size:10px;color:#a08060;cursor:pointer;">adesso no</button>
+</div>
+
 <div class="book" id="book">
   <div class="viewport">
     <div class="track" id="track"></div>
@@ -436,7 +448,7 @@ $("go").onclick=genera;
   var SURL="https://amkjuxqsyfzolkpeggez.supabase.co";
   var SKEY="sb_publishable_GVhncWICJOJ966CNj2h_Lw_lAUqC10P";
   var sb=null;
-  try{sb=supabase.createClient(SURL,SKEY);}catch(e){console.warn("Supabase non disponibile");}
+  try{sb=supabase.createClient(SURL,SKEY);window._sb=sb;}catch(e){console.warn("Supabase non disponibile");}
   if(!sb)return;
 
   function aggiornaBanner(session){
@@ -459,6 +471,17 @@ $("go").onclick=genera;
   sb.auth.onAuthStateChange(function(event,session){aggiornaBanner(session);});
 
   document.addEventListener("click",function(e){
+    if(e.target.closest("#btnAccediFine")){
+      var sb3=window._sb;
+      if(sb3){sb3.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}});}
+    }
+    if(e.target.closest("#btnSkipFine")){
+      document.getElementById("fineLoginBanner").style.display="none";
+    }
+    if(e.target.closest("#btnAccediHome")){
+      var sb2=window._sb;
+      if(sb2){sb2.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}});}
+    }
     if(e.target.closest("#btnLoginGoogle")){
       sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}});
     }
