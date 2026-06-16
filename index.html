@@ -23,29 +23,30 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
 .bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
 .bg img{position:absolute;}
 .wrap{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:28px 20px 60px;}
-.tit{font-family:'Amatic SC',cursive;font-weight:700;color:#d4542a;line-height:.9;font-size:44px;letter-spacing:1.5px;text-align:center;}
-.tit .cap{font-size:58px;}
+.tit{font-family:'Amatic SC',cursive;font-weight:700;color:#d4542a;line-height:.9;font-size:32px;letter-spacing:1px;text-align:center;white-space:nowrap;}
+.tit .cap{font-size:42px;}
 .sub{font-family:'Amatic SC',cursive;font-weight:700;text-transform:uppercase;letter-spacing:3px;font-size:18px;color:#8c8175;margin-top:2px;text-align:center;}
 .rule{display:block;margin:8px auto 2px;width:200px;height:10px;}
 .sec{margin-top:22px;}
-.seclabel{font-family:'Jost',sans-serif;text-transform:uppercase;letter-spacing:3px;font-size:12px;color:#7a5e48;margin-bottom:11px;}
+.seclabel{font-family:'Jost',sans-serif;text-transform:uppercase;letter-spacing:3px;font-size:11px;color:#7a5e48;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.step-num{width:22px;height:22px;border-radius:50%;background:#d4542a;color:#fff;font-family:'Comfortaa',sans-serif;font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
 .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;}
-.card{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 5px 11px;background:rgba(255,255,255,.92);border:1px solid #f0e8e0;border-radius:16px;transition:all .15s;}
+.card{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 5px 11px;background:rgba(255,255,255,.92);border:1px solid #f0e8e0;border-radius:16px;transition:all .15s;min-height:110px;}
 .card.on{border-color:#e0a06a;box-shadow:0 6px 16px rgba(200,140,80,.18);}
 .card img{width:58px;height:58px;object-fit:contain;}
 .card .em{font-size:26px;height:58px;display:flex;align-items:center;}
-.cn{font-size:11.5px;font-weight:600;color:#43403a;text-align:center;font-family:'Comfortaa',sans-serif;line-height:1.05;}
+.cn{font-size:10px;font-weight:600;color:#43403a;text-align:center;font-family:'Comfortaa',sans-serif;line-height:1.2;min-height:2.4em;display:flex;align-items:center;justify-content:center;}
 .cd{font-size:9.5px;line-height:1.15;text-align:center;font-style:italic;color:#a99a86;}
 .input{width:100%;font-family:'Lora';font-size:16px;color:#43403a;background:rgba(255,255,255,.95);border:1px solid #f0e8e0;border-radius:13px;padding:12px 15px;outline:none;}
 .input:focus{border-color:#e0a06a;}
 .nome{margin-top:10px;display:none;}
-.grid{margin-top:10px;display:grid;grid-template-columns:repeat(5,1fr);gap:7px;max-height:220px;overflow-y:auto;padding:4px;background:rgba(255,255,255,.6);border-radius:14px;border:1px solid #f3ece2;}
-.obj{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:11px;border:1px solid transparent;}
+.grid{margin-top:10px;display:flex;flex-direction:row;gap:8px;overflow-x:auto;overflow-y:hidden;padding:6px 4px;background:rgba(255,255,255,.6);border-radius:14px;border:1px solid #f3ece2;scrollbar-width:none;-ms-overflow-style:none;white-space:nowrap;}
+.obj{cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;gap:2px;padding:6px 6px;border-radius:11px;border:1px solid transparent;flex-shrink:0;}
 .obj.on{border-color:#e0a06a;background:#fff;}
 .obj img{width:42px;height:42px;object-fit:contain;}
 .obj span{font-size:9px;color:#9a8b78;font-family:'Comfortaa';}
 .pills{display:flex;gap:8px;flex-wrap:wrap;}
-.pill{flex:1;min-width:80px;cursor:pointer;font-family:'Lora';font-size:14px;color:#5a4d42;background:rgba(255,255,255,.92);border:1px solid #f0e8e0;border-radius:12px;padding:10px 6px;text-align:center;}
+.pill{flex:1;min-width:0;cursor:pointer;font-family:'Lora';font-size:13px;color:#5a4d42;background:rgba(255,255,255,.92);border:1px solid #f0e8e0;border-radius:12px;padding:9px 4px;text-align:center;}
 .pill.on{background:#d4542a;border-color:#d4542a;color:#fff;}
 .cta{width:100%;margin-top:24px;cursor:pointer;border:none;font-family:'Comfortaa',sans-serif;font-weight:600;font-size:19px;color:#fff;background:#d4542a;border-radius:16px;padding:15px;box-shadow:0 10px 24px rgba(212,84,42,.26);}
 .book{position:fixed;inset:0;z-index:50;display:none;}
@@ -147,21 +148,33 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
   <div class="tit"><span class="cap">L</span>A <span class="cap">F</span>ABBRICA <span class="cap">D</span>ELLE <span class="cap">F</span>AVOLE</div>
   <div class="sub">storie che si inventano ogni sera</div>
   <svg class="rule" viewBox="0 0 200 10"><path d="M3 6 C 55 1,150 9,197 4" stroke="#e0602a" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
-  <div class="sec"><div class="seclabel">Chi vive la storia</div><div class="banda-banner" id="openBanda"><span class="bb-hint">Non sai chi scegliere?</span><span class="bb-cta">✨ Scopri la banda →</span></div><div class="cards" id="cards"></div>
+  <div class="sec"><div class="seclabel"><span class="step-num">1</span>SCEGLI CHI VIVE LA STORIA<button id="openBanda" style="margin-left:auto;background:rgba(212,84,42,.08);border:1px solid rgba(212,84,42,.25);border-radius:8px;padding:4px 10px;font-family:'Comfortaa',sans-serif;font-size:11px;font-weight:600;color:#d4542a;cursor:pointer;white-space:nowrap;">✨ Scopri la banda →</button></div><div class="cards" id="cards"></div>
     <input class="input nome" id="nome" placeholder="il nome del tuo bambino" maxlength="20"/>
     <div class="genere-pills" id="generePills" style="display:none;">
       <button class="gpill on" data-g="bimbo">♂ Bimbo</button>
       <button class="gpill" data-g="bimba">♀ Bimba</button>
     </div></div>
-  <div class="sec"><div class="seclabel">Una cosa di ogni giorno</div>
+  <div class="sec"><div class="seclabel"><span class="step-num">2</span>SCEGLI UN OGGETTO</div>
     <input class="input" id="cosa" placeholder="scrivi o cerca (anche: sbadiglio, silenzio...)" value="calzino"/>
     <div class="grid" id="grid"></div></div>
-  <div class="sec"><div class="seclabel">Atmosfera</div><div class="pills" id="atm"></div></div>
-  <div class="sec"><div class="seclabel">Età</div><div class="pills" id="eta"></div></div>
-  <div class="sec"><div class="seclabel">Lunghezza</div><div class="pills" id="len"></div></div>
-  <button class="cta" id="go">Inventa la favola</button>
-  <button class="raccolta-btn" id="openRaccolta">📚 Le tue favole <span id="favCount"></span></button>
-  <button class="banda-btn" id="btnCondividi" style="margin-top:9px;font-size:14px;color:#7a5e48;">⬆ Condividi l'app</button>
+  <div class="sec"><div class="seclabel"><span class="step-num">3</span>ATMOSFERA, ETÀ E LUNGHEZZA</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:start;">
+    <div>
+      <div style="font-family:'Jost',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#a08060;margin-bottom:6px;text-align:center;">Atmosfera</div>
+      <div class="pills" id="atm" style="flex-direction:column;"></div>
+    </div>
+    <div>
+      <div style="font-family:'Jost',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#a08060;margin-bottom:6px;text-align:center;">Età</div>
+      <div class="pills" id="eta" style="flex-direction:column;"></div>
+    </div>
+    <div>
+      <div style="font-family:'Jost',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#a08060;margin-bottom:6px;text-align:center;">Lunghezza</div>
+      <div class="pills" id="len" style="flex-direction:column;"></div>
+    </div>
+  </div>
+</div>
+  <button class="cta" id="go">✨ Inventa la favola</button>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px;"><button class="raccolta-btn" id="openRaccolta" style="margin-top:0;">📚 Le tue favole <span id="favCount"></span></button><button class="banda-btn" id="btnCondividi" style="margin-top:0;font-size:13px;color:#7a5e48;">⬆ Condividi l'app</button></div>
   
 </div>
 
