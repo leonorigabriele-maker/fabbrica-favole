@@ -41,9 +41,9 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
 .input:focus{border-color:#e0a06a;}
 .nome{margin-top:10px;display:none;}
 .grid-wrap{position:relative;margin-top:10px;}
-.grid-wrap::after{content:'';position:absolute;top:2px;right:2px;bottom:2px;width:48px;background:linear-gradient(to right,rgba(255,253,251,0),rgba(255,253,251,.95));border-radius:0 12px 12px 0;pointer-events:none;z-index:2;}
-.grid{display:flex;flex-direction:row;gap:8px;overflow-x:auto;overflow-y:hidden;padding:6px 4px;background:rgba(255,255,255,.6);border-radius:14px;border:1px solid #f3ece2;scrollbar-width:none;-ms-overflow-style:none;white-space:nowrap;}
+.grid{display:flex;flex-direction:row;gap:8px;overflow-x:auto;overflow-y:hidden;padding:6px 4px 6px 4px;background:rgba(255,255,255,.6);border-radius:14px;border:1px solid #f3ece2;scrollbar-width:none;-ms-overflow-style:none;white-space:nowrap;}
 .grid::-webkit-scrollbar{display:none;}
+.grid-fade{position:absolute;top:1px;right:1px;bottom:1px;width:56px;background:linear-gradient(to right,transparent,rgba(255,253,251,.97));pointer-events:none;z-index:2;border-radius:0 13px 13px 0;overflow:hidden;}
 .obj{cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;gap:2px;padding:6px 6px;border-radius:11px;border:1px solid transparent;flex-shrink:0;}
 .obj.on{border-color:#e0a06a;background:#fff;}
 .obj img{width:42px;height:42px;object-fit:contain;}
@@ -159,7 +159,7 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
     </div></div>
   <div class="sec"><div class="seclabel"><span class="step-num">2</span>SCEGLI UN OGGETTO</div>
     <input class="input" id="cosa" placeholder="scrivi o cerca (anche: sbadiglio, silenzio...)" value="calzino"/>
-    <div class="grid-wrap"><div class="grid" id="grid"></div></div></div>
+    <div class="grid-wrap"><div class="grid" id="grid"></div><div class="grid-fade"></div></div></div>
   <div class="sec"><div class="seclabel"><span class="step-num">3</span>ATMOSFERA, ETÀ E LUNGHEZZA</div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:start;">
     <div>
