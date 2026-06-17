@@ -311,7 +311,7 @@ function updateCount(){
     if(sb){
       sb.auth.getSession().then(function(r){
         if(r.data.session&&r.data.session.user){
-          sb.from("favole").select("id",{count:"exact"}).eq("user_id",r.data.session.user.id).then(function(res){
+          sb.from("favole").select("id").eq("user_id",r.data.session.user.id).then(function(res){
             var el=$("favCount");
             if(el){
               var n=(res.data&&res.data.length)||0;
