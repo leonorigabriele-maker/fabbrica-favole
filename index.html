@@ -421,7 +421,7 @@ function renderBanda(){
  }).join("");
 }
 document.addEventListener("click",function(e){
-  if(e.target.closest("#openRaccolta")){renderRaccolta();$("raccolta").classList.add("show");}
+  if(e.target.closest("#openRaccolta")){renderRaccolta();$("raccolta").classList.add("show");if(sb){sb.auth.getSession().then(function(r){aggiornaBanner(r.data.session);});}}
   if(e.target.closest("#closeRaccolta")){$("raccolta").classList.remove("show");}
   if(e.target.closest("#openBanda")){renderBanda();$("banda").classList.add("show");}
   if(e.target.closest("#closeBanda")){$("banda").classList.remove("show");}
@@ -455,19 +455,28 @@ $("go").onclick=genera;
     var banner=document.getElementById("loginBanner");
     var userInfo=document.getElementById("userInfo");
     var userEmail=document.getElementById("userEmail");
-    if(!banner)return;
+    var btnAccediHome=document.getElementById("btnAccediHome");
     if(session&&session.user){
-      banner.classList.remove("show");
-      if(userInfo){userInfo.classList.add("show");}
-      if(userEmail){userEmail.textContent=session.user.email||"Connesso";}
+      if(banner) banner.classList.remove("show");
+      if(userInfo) userInfo.classList.add("show");
+      if(userEmail) userEmail.textContent=session.user.email||"Connesso";
+      if(btnAccediHome) btnAccediHome.style.display="none";
     } else {
       var skipped=localStorage.getItem("fdf_login_skipped");
-      if(!skipped){banner.classList.add("show");}
-      if(userInfo){userInfo.classList.remove("show");}
+      if(banner){if(!skipped){banner.classList.add("show");}else{banner.classList.remove("show");}}
+      if(userInfo) userInfo.classList.remove("show");
+      if(btnAccediHome) btnAccediHome.style.display="";
     }
   }
 
-  sb.auth.getSession().then(function(r){aggiornaBanner(r.data.session);});
+  sb.auth.getSession().then(function(r){
+    aggiornaBanner(r.data.session);
+    // se c'è sessione attiva aggiorna anche il banner raccolta
+    if(r.data.session){
+      var banner=document.getElementById("loginBanner");
+      if(banner) banner.classList.remove("show");
+    }
+  });
   sb.auth.onAuthStateChange(function(event,session){aggiornaBanner(session);});
 
   document.addEventListener("click",function(e){
