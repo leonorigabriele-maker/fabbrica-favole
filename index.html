@@ -379,30 +379,28 @@ function renderRaccolta(){
           // loggato: carica da Supabase
           $("raccList").innerHTML='<div class="racc-empty">Caricamento...</div>';
           sb.from("favole").select("*").eq("user_id",r.data.session.user.id).order("created_at",{ascending:false}).then(function(res){
-            if(res.error||!res.data||!res.data.length){
-              // Supabase vuoto — migro da localStorage se ci sono favole
-              var localArr=JSON.parse(localStorage.getItem("favole")||"[]");
-              if(localArr.length>0){
-                var uid=r.data.session.user.id;
-                var inserts=localArr.map(function(f){return {user_id:uid,titolo:f.titolo||"",chi:f.chi||"",scene:f.scene||[],data:f._data||""};});
-                sb.from("favole").insert(inserts).then(function(ins){
-                  if(!ins.error){
-                    // ricarico da Supabase dopo migrazione
-                    sb.from("favole").select("*").eq("user_id",uid).order("created_at",{ascending:false}).then(function(res2){
-                      var arr=res2.data?res2.data.map(function(row){return {titolo:row.titolo,chi:row.chi,scene:row.scene,_data:row.data,_sbid:row.id};}):localArr;
-                      mostraFavole(arr);
-                      updateCount();
-                    });
-                  } else {
-                    mostraFavole(localArr);
-                  }
+            var localArr=JSON.parse(localStorage.getItem("favole")||"[]");
+            var sbArr=(res.error||!res.data)?[]:(res.data.map(function(row){return {titolo:row.titolo,chi:row.chi,scene:row.scene,_data:row.data,_sbid:row.id};}));
+            // trova favole locali non ancora su Supabase (matching per titolo+chi)
+            var sbKeys=sbArr.map(function(f){return (f.titolo||"")+"__"+(f.chi||"");});
+            var toMigrate=localArr.filter(function(f){
+              return sbKeys.indexOf((f.titolo||"")+"__"+(f.chi||""))<0;
+            });
+            if(toMigrate.length>0){
+              var uid=r.data.session.user.id;
+              var inserts=toMigrate.map(function(f){return {user_id:uid,titolo:f.titolo||"",chi:f.chi||"",scene:f.scene||[],data:f._data||""};});
+              sb.from("favole").insert(inserts).then(function(ins){
+                if(ins.error) console.warn("Migrazione error:",ins.error);
+                // ricarica dopo migrazione
+                sb.from("favole").select("*").eq("user_id",uid).order("created_at",{ascending:false}).then(function(res2){
+                  var arr=res2.data?res2.data.map(function(row){return {titolo:row.titolo,chi:row.chi,scene:row.scene,_data:row.data,_sbid:row.id};}):localArr;
+                  mostraFavole(arr);
+                  updateCount();
                 });
-              } else {
-                mostraFavole([]);
-              }
+              });
             } else {
-              var arr=res.data.map(function(row){return {titolo:row.titolo,chi:row.chi,scene:row.scene,_data:row.data,_sbid:row.id};});
-              mostraFavole(arr);
+              // niente da migrare — mostra direttamente
+              mostraFavole(sbArr.length>0?sbArr:localArr);
             }
           });
           return;
