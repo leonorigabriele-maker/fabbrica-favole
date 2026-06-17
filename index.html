@@ -254,7 +254,7 @@ $("cards").innerHTML=PERS.map(function(p){
 }).join("");
 function drawGrid(f){f=(f||"").toLowerCase();$("grid").innerHTML=OGGETTI.filter(function(o){return o.indexOf(f)>=0;}).map(function(o){return '<div class="obj" data-o="'+o+'"><img src="'+OBJDIR+o+'.png"><span>'+o+'</span></div>';}).join("");document.querySelectorAll(".obj").forEach(function(e){e.onclick=function(){$("cosa").value=e.dataset.o;document.querySelectorAll(".obj").forEach(function(x){x.classList.remove("on");});e.classList.add("on");};});}
 drawGrid("");
-var PILLS={atm:["dolce","buffa","poetica"],eta:["2-3 anni","4-5 anni","6-7 anni"],len:["cortissima","media","della buonanotte"]};
+var PILLS={atm:["dolce","buffa","avventurosa"],eta:["2-3 anni","4-5 anni","6-7 anni"],len:["cortissima","media","della buonanotte"]};
 ["atm","eta","len"].forEach(function(k){$(k).innerHTML=PILLS[k].map(function(a){return '<button class="pill" data-v="'+a+'">'+a+'</button>';}).join("");});
 function refresh(){
   document.querySelectorAll("#cards .card").forEach(function(e){e.classList.toggle("on",e.dataset.id===S.chi);});
