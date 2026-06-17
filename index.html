@@ -177,7 +177,7 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
   </div>
 </div>
   <button class="cta" id="go">✨ Inventa la favola</button>
-  <button class="raccolta-btn" id="openRaccolta" style="margin-top:11px;">📚 Le tue favole <span id="favCount"></span></button>
+  <button class="raccolta-btn" id="openRaccolta" style="margin-top:11px;">📚 Le tue favole</button>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px;">
     <button class="raccolta-btn" id="btnAccediHome" style="margin-top:0;font-size:13px;color:#7a5e48;">👤 Accedi</button>
     <button class="raccolta-btn" id="btnCondividi" style="margin-top:0;font-size:13px;color:#7a5e48;">⬆ Condividi l'app</button>
@@ -305,32 +305,7 @@ $("close").onclick=function(){$("book").classList.remove("show");};
 var x0=null;var vp=document.querySelector(".viewport");
 vp.addEventListener("touchstart",function(e){x0=e.touches[0].clientX;},{passive:true});
 vp.addEventListener("touchend",function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;if(dx<-40)go(idx+1);else if(dx>40)go(idx-1);x0=null;});
-function updateCount(){
-  try{
-    var sb=window._sb;
-    if(sb){
-      sb.auth.getSession().then(function(r){
-        if(r.data.session&&r.data.session.user){
-          sb.from("favole").select("id").eq("user_id",r.data.session.user.id).then(function(res){
-            var el=$("favCount");
-            if(el){
-              var n=(res.data&&res.data.length)||0;
-              el.textContent=n>0?"("+n+")":"";
-            }
-          });
-          return;
-        }
-        var arr=JSON.parse(localStorage.getItem("favole")||"[]");
-        var el=$("favCount");
-        if(el)el.textContent=arr.length>0?"("+arr.length+")":"";
-      });
-      return;
-    }
-    var arr=JSON.parse(localStorage.getItem("favole")||"[]");
-    var el=$("favCount");
-    if(el)el.textContent=arr.length>0?"("+arr.length+")":"";
-  }catch(e){}
-}
+function updateCount(){}
 function salva(){
   try{
     if(!lastFav)return;
