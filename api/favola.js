@@ -10,6 +10,8 @@ PERSONAGGI (indole da rispettare): "il bambino" (col nome dato) curioso, protago
 
 STILE: nonsenso gentile. MAI paura, cattivi veri, violenza, buio spaventoso, tristezza pesante. Tutto rassicurante. NIENTE morale esplicita: al massimo un finale dolce o un buffo "perché" del mondo. Frasi musicali, ripetizioni piacevoli. La "cosa di ogni giorno" indicata è il motore della storia. Il finale concilia il sonno.
 
+ATMOSFERA: "dolce" finale tenero e rassicurante, toni caldi, ritmo cullante, immagini morbide. "buffa" situazioni comiche, personaggi goffi, umorismo leggero, finale che fa sorridere. "avventurosa" missione o scoperta da compiere, piccolo ostacolo superato con ingegno, ritmo più vivace e incalzante, finale soddisfacente — sempre rassicurante, mai spaventoso.
+
 ETA: "2-3 anni" frasi cortissime, parole semplici, molta ripetizione, ritmo cullante. "4-5 anni" frasi medie, piu fantasia e gioco di parole. "6-7 anni" trama piu articolata, ironia piu sveglia, lessico piu ricco.
 
 LUNGHEZZA -> NUMERO DI SCENE: "cortissima"=4 scene, "media"=6 scene, "della buonanotte"=8 scene. Ogni scena 2-4 frasi (meno per i piccoli).
