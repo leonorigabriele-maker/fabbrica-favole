@@ -305,7 +305,32 @@ $("close").onclick=function(){$("book").classList.remove("show");};
 var x0=null;var vp=document.querySelector(".viewport");
 vp.addEventListener("touchstart",function(e){x0=e.touches[0].clientX;},{passive:true});
 vp.addEventListener("touchend",function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;if(dx<-40)go(idx+1);else if(dx>40)go(idx-1);x0=null;});
-function updateCount(){try{var arr=JSON.parse(localStorage.getItem("favole")||"[]");var el=$("favCount");if(el)el.textContent=arr.length>0?"("+arr.length+")":"";}catch(e){}}
+function updateCount(){
+  try{
+    var sb=window._sb;
+    if(sb){
+      sb.auth.getSession().then(function(r){
+        if(r.data.session&&r.data.session.user){
+          sb.from("favole").select("id",{count:"exact"}).eq("user_id",r.data.session.user.id).then(function(res){
+            var el=$("favCount");
+            if(el){
+              var n=(res.data&&res.data.length)||0;
+              el.textContent=n>0?"("+n+")":"";
+            }
+          });
+          return;
+        }
+        var arr=JSON.parse(localStorage.getItem("favole")||"[]");
+        var el=$("favCount");
+        if(el)el.textContent=arr.length>0?"("+arr.length+")":"";
+      });
+      return;
+    }
+    var arr=JSON.parse(localStorage.getItem("favole")||"[]");
+    var el=$("favCount");
+    if(el)el.textContent=arr.length>0?"("+arr.length+")":"";
+  }catch(e){}
+}
 function salva(){
   try{
     if(!lastFav)return;
@@ -355,9 +380,26 @@ function renderRaccolta(){
           $("raccList").innerHTML='<div class="racc-empty">Caricamento...</div>';
           sb.from("favole").select("*").eq("user_id",r.data.session.user.id).order("created_at",{ascending:false}).then(function(res){
             if(res.error||!res.data||!res.data.length){
-              // fallback localStorage
-              var arr=JSON.parse(localStorage.getItem("favole")||"[]");
-              mostraFavole(arr);
+              // Supabase vuoto — migro da localStorage se ci sono favole
+              var localArr=JSON.parse(localStorage.getItem("favole")||"[]");
+              if(localArr.length>0){
+                var uid=r.data.session.user.id;
+                var inserts=localArr.map(function(f){return {user_id:uid,titolo:f.titolo||"",chi:f.chi||"",scene:f.scene||[],data:f._data||""};});
+                sb.from("favole").insert(inserts).then(function(ins){
+                  if(!ins.error){
+                    // ricarico da Supabase dopo migrazione
+                    sb.from("favole").select("*").eq("user_id",uid).order("created_at",{ascending:false}).then(function(res2){
+                      var arr=res2.data?res2.data.map(function(row){return {titolo:row.titolo,chi:row.chi,scene:row.scene,_data:row.data,_sbid:row.id};}):localArr;
+                      mostraFavole(arr);
+                      updateCount();
+                    });
+                  } else {
+                    mostraFavole(localArr);
+                  }
+                });
+              } else {
+                mostraFavole([]);
+              }
             } else {
               var arr=res.data.map(function(row){return {titolo:row.titolo,chi:row.chi,scene:row.scene,_data:row.data,_sbid:row.id};});
               mostraFavole(arr);
