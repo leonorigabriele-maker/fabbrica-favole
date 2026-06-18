@@ -601,6 +601,25 @@ $("go").onclick=genera;
 [["azzurro",-7,-3,150,15],["rosa",83,5,135,-20],["giallo",-8,30,140,40]].forEach(function(a){var im=document.createElement("img");im.src="images/splatter/"+a[0]+".png";im.style.left=a[1]+"%";im.style.top=a[2]+"%";im.style.width=a[3]+"px";im.style.transform="rotate("+a[4]+"deg)";im.onerror=function(){this.remove();};$("cornerbg").appendChild(im);});
 
 /* ===== SUPABASE LOGIN ===== */
+function aggiornaBanner(session){
+  var banner=document.getElementById("loginBanner");
+  var userInfo=document.getElementById("userInfo");
+  var userEmail=document.getElementById("userEmail");
+  var btnAccediHome=document.getElementById("btnAccediHome");
+  if(session&&session.user){
+    if(banner) banner.classList.remove("show");
+    if(userInfo) userInfo.classList.add("show");
+    if(userEmail) userEmail.textContent=session.user.email||"Connesso";
+    if(btnAccediHome) btnAccediHome.style.display="none";
+  } else {
+    var skipped=localStorage.getItem("fdf_login_skipped");
+    if(banner){if(!skipped){banner.classList.add("show");}else{banner.classList.remove("show");}}
+    if(userInfo) userInfo.classList.remove("show");
+    if(btnAccediHome) btnAccediHome.style.display="";
+  }
+}
+window._aggiornaBanner=aggiornaBanner;
+
 (function(){
   var SURL="https://amkjuxqsyfzolkpeggez.supabase.co";
   var SKEY="sb_publishable_GVhncWICJOJ966CNj2h_Lw_lAUqC10P";
@@ -608,65 +627,46 @@ $("go").onclick=genera;
   try{sb=supabase.createClient(SURL,SKEY);window._sb=sb;}catch(e){console.warn("Supabase non disponibile");}
   if(!sb)return;
 
-  window._aggiornaBanner=function aggiornaBanner(session){
-    var banner=document.getElementById("loginBanner");
-    var userInfo=document.getElementById("userInfo");
-    var userEmail=document.getElementById("userEmail");
-    var btnAccediHome=document.getElementById("btnAccediHome");
-    if(session&&session.user){
-      if(banner) banner.classList.remove("show");
-      if(userInfo) userInfo.classList.add("show");
-      if(userEmail) userEmail.textContent=session.user.email||"Connesso";
-      if(btnAccediHome) btnAccediHome.style.display="none";
-    } else {
-      var skipped=localStorage.getItem("fdf_login_skipped");
-      if(banner){if(!skipped){banner.classList.add("show");}else{banner.classList.remove("show");}}
-      if(userInfo) userInfo.classList.remove("show");
-      if(btnAccediHome) btnAccediHome.style.display="";
-    }
-  }
-
   sb.auth.getSession().then(function(r){
     aggiornaBanner(r.data.session);
-    // se c'è sessione attiva aggiorna anche il banner raccolta
     if(r.data.session){
       var banner=document.getElementById("loginBanner");
       if(banner) banner.classList.remove("show");
     }
   });
+
   sb.auth.onAuthStateChange(function(event,session){
     aggiornaBanner(session);
-    // se c'è una bozza da salvare dopo il login, la salvo
     if(event==="SIGNED_IN"&&session&&session.user){
       var bozza=localStorage.getItem("fdf_bozza_salva");
       if(bozza){
         try{
           lastFav=JSON.parse(bozza);
           localStorage.removeItem("fdf_bozza_salva");
+          console.log("FDF: salvo bozza dopo login",lastFav.titolo);
           setTimeout(function(){eseguiSalva();},500);
-        }catch(e){}
+        }catch(e){console.log("FDF: errore bozza",e);}
       }
     }
   });
 
   document.addEventListener("click",function(e){
     if(e.target.closest("#btnAccediFine")){
-      var sb3=window._sb;
-      if(sb3){sb3.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}});}
+      if(sb){sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}});}
     }
     if(e.target.closest("#btnSkipFine")){
       document.getElementById("fineLoginBanner").style.display="none";
     }
     if(e.target.closest("#btnAccediHome")){
-      var sb2=window._sb;
-      if(sb2){sb2.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}});}
+      if(sb){sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}});}
     }
     if(e.target.closest("#btnLoginGoogle")){
-      sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}});
+      if(sb){sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}});}
     }
     if(e.target.closest("#btnSkipLogin")){
       localStorage.setItem("fdf_login_skipped","1");
-      document.getElementById("loginBanner").classList.remove("show");
+      var b=document.getElementById("loginBanner");
+      if(b) b.classList.remove("show");
     }
     if(e.target.closest("#btnLogout")){
       sb.auth.signOut().then(function(){
