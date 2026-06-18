@@ -313,7 +313,8 @@ function salva(){
     if(sb){
       sb.auth.getSession().then(function(r){
         if(!r.data.session||!r.data.session.user){
-          // non loggato: mostra banner login
+          // non loggato: salva bozza e mostra banner login
+          if(lastFav){try{localStorage.setItem("fdf_bozza_salva",JSON.stringify(lastFav));}catch(e){}}
           var flb=document.getElementById("fineLoginBanner");
           if(flb){flb.style.display="flex";}
           return;
@@ -633,7 +634,20 @@ $("go").onclick=genera;
       if(banner) banner.classList.remove("show");
     }
   });
-  sb.auth.onAuthStateChange(function(event,session){aggiornaBanner(session);});
+  sb.auth.onAuthStateChange(function(event,session){
+    aggiornaBanner(session);
+    // se c'è una bozza da salvare dopo il login, la salvo
+    if(event==="SIGNED_IN"&&session&&session.user){
+      var bozza=localStorage.getItem("fdf_bozza_salva");
+      if(bozza){
+        try{
+          lastFav=JSON.parse(bozza);
+          localStorage.removeItem("fdf_bozza_salva");
+          setTimeout(function(){eseguiSalva();},500);
+        }catch(e){}
+      }
+    }
+  });
 
   document.addEventListener("click",function(e){
     if(e.target.closest("#btnAccediFine")){
