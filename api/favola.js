@@ -1,6 +1,7 @@
 // api/favola.js — Il "cervello" de La Fabbrica delle Favole
 const OGGETTI = ["luna","calzino","bottone","valigia","palloncino","stella","chiave","ombrello","cappello","barattolo","cucchiaio","libro","candela","sveglia","aquilone","cannocchiale","pera","gomitolo","conchiglia","fiocco","semaforo","albero","bicicletta","auto","letto","nuvola","sedia","porta","telefono","fiore"];
 const SFONDI = ["notte","cameretta","citta","bosco","nuvole","mare"];
+const ADMIN_EMAIL = "leonorigabriele@gmail.com";
 
 const SYSTEM = `Sei il narratore de "La Fabbrica delle Favole". Inventi una favola della buonanotte breve e originale nello spirito di Gianni Rodari: fantasia, nonsenso gentile, ironia, gioco di parole, finali aperti o teneri. Scrivi in italiano semplice e musicale. NON copiare personaggi o storie di Rodari: usa solo il suo metodo.
 
@@ -27,6 +28,27 @@ export default async function handler(req, res) {
   if (req.method !== "POST") { res.status(405).json({ error: "Method not allowed" }); return; }
   try {
     const { chi = "lalla", nome = "", genere = "bimbo", cosa = "una cosa", atmosfera = "dolce", eta = "4-5 anni", lunghezza = "media" } = req.body || {};
+
+    // controllo lato server: verifica limite per utenti loggati
+    const authHeader = req.headers["authorization"];
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const token = authHeader.replace("Bearer ", "");
+      try {
+        const { createClient } = await import("@supabase/supabase-js");
+        const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+        const { data: { user } } = await sb.auth.getUser(token);
+        if (user && user.email !== ADMIN_EMAIL) {
+          const oggi = new Date().toISOString().slice(0, 10);
+          const { data } = await sb.from("generazioni").select("count").eq("user_id", user.id).eq("data", oggi);
+          const n = data && data.length ? parseInt(data[0].count || 0) : 0;
+          if (n >= 10) {
+            res.status(429).json({ error: "limite_raggiunto" });
+            return;
+          }
+        }
+      } catch(e) { /* se fallisce il check, procedi comunque */ }
+    }
+
     const NOMI = {lalla:"Lalla",tobia:"Tobia",nuvola:"Donna Nuvola",prof:"Professor Quandomai",mimi:"Mimì",nino:"Nino"};
     let protagonista;
     if(chi === "bimbo"){
