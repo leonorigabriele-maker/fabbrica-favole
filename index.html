@@ -314,7 +314,7 @@ function salva(){
       sb.auth.getSession().then(function(r){
         if(!r.data.session||!r.data.session.user){
           // non loggato: salva bozza e mostra banner login
-          if(lastFav){try{localStorage.setItem("fdf_bozza_salva",JSON.stringify(lastFav));}catch(e){}}
+          if(lastFav){try{localStorage.setItem("fdf_bozza_salva",JSON.stringify(lastFav));console.log("FDF: bozza salvata",lastFav.titolo);}catch(e){console.log("FDF: errore bozza",e);}}
           var flb=document.getElementById("fineLoginBanner");
           if(flb){flb.style.display="flex";}
           return;
@@ -532,7 +532,7 @@ function renderBanda(){
  }).join("");
 }
 document.addEventListener("click",function(e){
-  if(e.target.closest("#openRaccolta")){renderRaccolta();$("raccolta").classList.add("show");if(sb){sb.auth.getSession().then(function(r){aggiornaBanner(r.data.session);});}}
+  if(e.target.closest("#openRaccolta")){renderRaccolta();$("raccolta").classList.add("show");if(window._sb){window._sb.auth.getSession().then(function(r){aggiornaBanner(r.data.session);});}}
   if(e.target.closest("#closeRaccolta")){$("raccolta").classList.remove("show");updateCount();}
   if(e.target.closest("#openBanda")){renderBanda();$("banda").classList.add("show");}
   if(e.target.closest("#closeBanda")){$("banda").classList.remove("show");}
