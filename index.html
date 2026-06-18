@@ -223,8 +223,8 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
 <div class="err" id="err"><div style="font-size:40px">😴</div><p id="errmsg" style="font-family:Comfortaa;color:#8c7355"></p><button class="b" style="max-width:200px" onclick="document.getElementById('err').classList.remove('show')">riprova</button></div>
 <!-- BANNER LOGIN PAGINA FINE -->
 <div id="fineLoginBanner" style="display:none;position:fixed;bottom:110px;left:50%;transform:translateX(-50%);width:calc(100% - 36px);max-width:524px;background:rgba(255,253,251,.96);border:1.5px solid rgba(212,84,42,.22);border-radius:14px;padding:14px 16px;z-index:51;flex-direction:column;align-items:center;gap:8px;text-align:center;">
-  <div style="font-family:'Amatic SC',cursive;font-weight:700;font-size:20px;color:#d4542a;line-height:1;">Ti è piaciuta?</div>
-  <div style="font-family:'Comfortaa',sans-serif;font-size:10px;color:#7a6a5a;line-height:1.5;">Accedi per salvare le favole su tutti i dispositivi</div>
+  <div style="font-family:'Amatic SC',cursive;font-weight:700;font-size:20px;color:#d4542a;line-height:1;">Salva la tua favola</div>
+  <div style="font-family:'Comfortaa',sans-serif;font-size:10px;color:#7a6a5a;line-height:1.5;">Accedi con Google per conservare le tue favole</div>
   <button id="btnAccediFine" style="background:#2e2b27;color:#f5d4c0;font-family:'Comfortaa',sans-serif;font-size:12px;font-weight:600;border:none;border-radius:10px;padding:10px 16px;cursor:pointer;width:100%;">Accedi con Google</button>
   <button id="btnSkipFine" style="background:none;border:none;font-family:'Comfortaa',sans-serif;font-size:10px;color:#a08060;cursor:pointer;">adesso no</button>
 </div>
@@ -309,9 +309,31 @@ function updateCount(){}
 function salva(){
   try{
     if(!lastFav)return;
+    var sb=window._sb;
+    if(sb){
+      sb.auth.getSession().then(function(r){
+        if(!r.data.session||!r.data.session.user){
+          // non loggato: mostra banner login
+          var flb=document.getElementById("fineLoginBanner");
+          if(flb){flb.style.display="flex";}
+          return;
+        }
+        // loggato: salva
+        eseguiSalva();
+      });
+      return;
+    }
+    // fallback senza supabase
+    eseguiSalva();
+  }catch(e){}
+}
+
+function eseguiSalva(){
+  try{
+    if(!lastFav)return;
     var fav=JSON.parse(JSON.stringify(lastFav));
     fav._data=new Date().toLocaleDateString("it-IT");
-    // salva sempre in localStorage
+    // salva in localStorage
     var arr=JSON.parse(localStorage.getItem("favole")||"[]");
     arr.unshift(fav);
     localStorage.setItem("favole",JSON.stringify(arr));
@@ -342,7 +364,22 @@ function mostraFavole(arr){
     var NOMI={lalla:"Lalla",tobia:"Tobia",nuvola:"Donna Nuvola",prof:"Professore",mimi:"Mimì",nino:"Nino",bimbo:"il tuo bimbo"};
     $("raccList").innerHTML=arr.map(function(f,i){var nome=NOMI[f.chi]||f.chi||"";return '<div class="fav-card" data-i="'+i+'"><button class="fav-del" data-i="'+i+'">✕</button><div class="fav-titolo">'+f.titolo+'</div><div class="fav-meta">'+nome+(f._data?' · '+f._data:'')+'</div></div>';}).join("");
     document.querySelectorAll(".fav-card").forEach(function(el){el.onclick=function(e){if(e.target.classList.contains("fav-del"))return;lastFav=arr[parseInt(el.dataset.i)];if(!lastFav)return;render(lastFav);$("raccolta").classList.remove("show");$("book").classList.add("show");};});
-    document.querySelectorAll(".fav-del").forEach(function(btn){btn.onclick=function(e){e.stopPropagation();arr.splice(parseInt(btn.dataset.i),1);localStorage.setItem("favole",JSON.stringify(arr));updateCount();mostraFavole(arr);};});
+    document.querySelectorAll(".fav-del").forEach(function(btn){btn.onclick=function(e){
+    e.stopPropagation();
+    var i=parseInt(btn.dataset.i);
+    var fav=arr[i];
+    arr.splice(i,1);
+    localStorage.setItem("favole",JSON.stringify(arr));
+    updateCount();
+    mostraFavole(arr);
+    // se loggato cancella anche da Supabase
+    var sb=window._sb;
+    if(sb&&fav&&fav._sbid){
+      sb.from("favole").delete().eq("id",fav._sbid).then(function(res){
+        if(res.error) console.warn("Supabase delete error:",res.error);
+      });
+    }
+  };});
   }catch(e){$("raccList").innerHTML='<div class="racc-empty">Errore nel caricare le favole.</div>';}
 }
 function renderRaccolta(){
@@ -505,12 +542,58 @@ document.addEventListener("click",function(e){
   if(e.target.closest("#btnCondividi")){condividi();}
 });
 updateCount();
+function getLimiteKey(){return "fdf_gen_"+new Date().toISOString().slice(0,10);}
+function getGenOggi(){try{return parseInt(localStorage.getItem(getLimiteKey())||"0");}catch(e){return 0;}}
+function incrGen(){try{var n=getGenOggi()+1;localStorage.setItem(getLimiteKey(),n);}catch(e){}}
+function isAdmin(email){return email==="leonorigabriele@gmail.com";}
+
 function genera(){
+  // controlla limite
+  var sb=window._sb;
+  if(sb){
+    sb.auth.getSession().then(function(r){
+      var email=r.data.session&&r.data.session.user?r.data.session.user.email:"";
+      if(isAdmin(email)){avviaGenera();return;}
+      // loggato: controlla su Supabase
+      if(r.data.session&&r.data.session.user){
+        var oggi=new Date().toISOString().slice(0,10);
+        sb.from("generazioni").select("count").eq("user_id",r.data.session.user.id).eq("data",oggi).then(function(res){
+          var n=(res.data&&res.data.length)?parseInt(res.data[0].count||0):0;
+          if(n>=10){mostraLimite();return;}
+          avviaGenera();
+        });
+        return;
+      }
+      // non loggato: controlla localStorage
+      if(getGenOggi()>=10){mostraLimite();return;}
+      avviaGenera();
+    });
+    return;
+  }
+  if(getGenOggi()>=10){mostraLimite();return;}
+  avviaGenera();
+}
+
+function mostraLimite(){
+  $("errmsg").innerHTML="Hai inventato 10 favole oggi 🌙<br><br>Torna domani per altre storie!";
+  $("err").classList.add("show");
+}
+
+function avviaGenera(){
   $("load").classList.add("show");
   var body={chi:S.chi,nome:$("nome").value.trim(),genere:S.genere,cosa:($("cosa").value.trim()||"una cosa"),atmosfera:S.atm,eta:S.eta,lunghezza:S.len};
   fetch("/api/favola",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)})
    .then(function(r){return r.json();})
-   .then(function(fav){$("load").classList.remove("show");if(!fav.scene){throw new Error(fav.error||"vuota");}lastFav=fav;render(fav);$("book").classList.add("show");if(window.va)window.va("event",{name:"favola_generata"});})
+   .then(function(fav){$("load").classList.remove("show");if(!fav.scene){throw new Error(fav.error||"vuota");}lastFav=fav;render(fav);$("book").classList.add("show");if(window.va)window.va("event",{name:"favola_generata"});
+      // incrementa contatore
+      incrGen();
+      var sb2=window._sb;
+      if(sb2){sb2.auth.getSession().then(function(r){
+        if(r.data.session&&r.data.session.user&&!isAdmin(r.data.session.user.email)){
+          var oggi=new Date().toISOString().slice(0,10);
+          sb2.from("generazioni").upsert({user_id:r.data.session.user.id,data:oggi,count:getGenOggi()},{onConflict:"user_id,data"});
+        }
+      });}})
    .catch(function(e){$("load").classList.remove("show");$("errmsg").textContent="Ops, la favola non è arrivata. Riprova tra un momento.";$("err").classList.add("show");});
 }
 $("go").onclick=genera;
