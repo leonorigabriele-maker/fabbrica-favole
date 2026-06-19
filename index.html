@@ -148,7 +148,7 @@ body{font-family:'Lora',serif;color:#43403a;background:#fffdfb;}
 <body>
 <div class="bg" id="cornerbg"></div>
 <div class="wrap" id="crea">
-  <div class="tit"><span class="cap">L</span>A <span class="cap">F</span>ABBRICA <span class="cap">D</span>ELLE <span class="cap">F</span>AVOLE</div>
+  <div class="tit"><span class="cap">L</span>A <span class="cap">F</span>ABBRICA <span class="cap">D</span>ELLE <span class="cap">F</span>AVOLE</div><a id="adminLink" href="#/admin" style="display:none;text-align:center;font-family:Comfortaa,sans-serif;font-size:10px;color:#c0b0a0;text-decoration:none;margin-top:4px;">📊 pannello</a>
   <div class="sub">storie che si inventano ogni sera</div>
   <svg class="rule" viewBox="0 0 200 10"><path d="M3 6 C 55 1,150 9,197 4" stroke="#e0602a" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
   <div class="sec"><div class="seclabel"><span class="step-num">1</span>SCEGLI CHI VIVE LA STORIA<button id="openBanda" style="margin-left:auto;background:rgba(212,84,42,.08);border:1px solid rgba(212,84,42,.25);border-radius:8px;padding:4px 10px;font-family:'Comfortaa',sans-serif;font-size:11px;font-weight:600;color:#d4542a;cursor:pointer;white-space:nowrap;">✨ Scopri la banda →</button></div><div class="cards" id="cards"></div>
@@ -644,6 +644,11 @@ function aggiornaBanner(session){
     if(banner){if(!skipped){banner.classList.add("show");}else{banner.classList.remove("show");}}
     if(userInfo) userInfo.classList.remove("show");
     if(btnAccediHome) btnAccediHome.style.display="";
+  }
+  var adminLink=document.getElementById("adminLink");
+  if(adminLink){
+    var isAdminUser=session&&session.user&&session.user.email==="leonorigabriele@gmail.com";
+    adminLink.style.display=isAdminUser?"block":"none";
   }
 }
 window._aggiornaBanner=aggiornaBanner;
