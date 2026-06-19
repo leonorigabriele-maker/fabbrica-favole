@@ -560,7 +560,9 @@ function renderBanda(){
  }).join("");
 }
 document.addEventListener("click",function(e){
-  if(e.target.closest("#openRaccolta")){renderRaccolta();$("raccolta").classList.add("show");if(window._sb){window._sb.auth.getSession().then(function(r){if(window._aggiornaBanner)window._aggiornaBanner(r.data.session);});}}
+  if(e.target.closest("#btnAbbonatiMensile")){avviaCheckout("mensile");}
+    if(e.target.closest("#btnAbbonatiAnnuale")){avviaCheckout("annuale");}
+    if(e.target.closest("#openRaccolta")){renderRaccolta();$("raccolta").classList.add("show");if(window._sb){window._sb.auth.getSession().then(function(r){if(window._aggiornaBanner)window._aggiornaBanner(r.data.session);});}}
   if(e.target.closest("#closeRaccolta")){$("raccolta").classList.remove("show");updateCount();}
   if(e.target.closest("#openBanda")){renderBanda();$("banda").classList.add("show");}
   if(e.target.closest("#closeBanda")){$("banda").classList.remove("show");}
@@ -639,6 +641,7 @@ function aggiornaBanner(session){
     if(userInfo) userInfo.classList.add("show");
     if(userEmail) userEmail.textContent=session.user.email||"Connesso";
     if(btnAccediHome) btnAccediHome.style.display="none";
+    mostraStatoAbbonamento(session.user);
   } else {
     var skipped=localStorage.getItem("fdf_login_skipped");
     if(banner){if(!skipped){banner.classList.add("show");}else{banner.classList.remove("show");}}
@@ -650,6 +653,46 @@ function aggiornaBanner(session){
     var isAdminUser=session&&session.user&&session.user.email==="leonorigabriele@gmail.com";
     adminLink.style.display=isAdminUser?"block":"none";
   }
+}
+
+function mostraStatoAbbonamento(user){
+  var sb=window._sb;
+  var box=document.getElementById("abbonamentoBox");
+  if(!sb||!box)return;
+  sb.from("abbonamenti").select("*").eq("user_id",user.id).single().then(function(res){
+    var statusEl=document.getElementById("abbonamentoStatus");
+    var btnM=document.getElementById("btnAbbonatiMensile");
+    var btnA=document.getElementById("btnAbbonatiAnnuale");
+    box.style.display="block";
+    var attivo=res.data&&res.data.attivo;
+    if(attivo){
+      var scad=res.data.scadenza?new Date(res.data.scadenza).toLocaleDateString("it-IT"):"";
+      if(statusEl)statusEl.innerHTML="✨ Abbonamento "+(res.data.piano||"")+" attivo<br>fino al "+scad;
+      if(btnM)btnM.style.display="none";
+      if(btnA)btnA.style.display="none";
+    } else {
+      if(statusEl)statusEl.textContent="Sblocca favole illimitate";
+      if(btnM)btnM.style.display="block";
+      if(btnA)btnA.style.display="block";
+    }
+  });
+}
+
+function avviaCheckout(piano){
+  var sb=window._sb;
+  if(!sb)return;
+  sb.auth.getSession().then(function(r){
+    if(!r.data.session||!r.data.session.user){return;}
+    var user=r.data.session.user;
+    fetch("/api/checkout",{
+      method:"POST",
+      headers:{"content-type":"application/json"},
+      body:JSON.stringify({piano:piano,userId:user.id,email:user.email})
+    }).then(function(resp){return resp.json();})
+      .then(function(data){
+        if(data.url){window.location.href=data.url;}
+      });
+  });
 }
 window._aggiornaBanner=aggiornaBanner;
 
@@ -937,6 +980,11 @@ function renderAdminData(sb){
   <div class="lb-user" id="userInfo">
     <span id="userEmail"></span>
     <button class="lb-logout" id="btnLogout">Esci</button>
+  </div>
+  <div id="abbonamentoBox" style="display:none;margin-top:10px;padding:12px;background:rgba(212,84,42,.06);border:1px solid rgba(212,84,42,.18);border-radius:12px;text-align:center;">
+    <div id="abbonamentoStatus" style="font-family:'Comfortaa',sans-serif;font-size:12px;color:#7a6a5a;margin-bottom:8px;"></div>
+    <button id="btnAbbonatiMensile" style="display:none;width:100%;margin-bottom:6px;background:#2e2b27;color:#f5d4c0;font-family:'Comfortaa',sans-serif;font-size:12px;font-weight:600;border:none;border-radius:10px;padding:9px;cursor:pointer;">Abbonati mensile</button>
+    <button id="btnAbbonatiAnnuale" style="display:none;width:100%;background:#d4542a;color:#fff;font-family:'Comfortaa',sans-serif;font-size:12px;font-weight:600;border:none;border-radius:10px;padding:9px;cursor:pointer;">Abbonati annuale</button>
   </div>
 </div>
 </div>
