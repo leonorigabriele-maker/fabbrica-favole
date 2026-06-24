@@ -660,15 +660,15 @@ function mostraStatoAbbonamento(user){
   var sb=window._sb;
   var box=document.getElementById("abbonamentoBox");
   if(!sb||!box)return;
-  sb.from("abbonamenti").select("*").eq("user_id",user.id).single().then(function(res){
+  sb.from("abbonamenti").select("*").eq("user_id",user.id).then(function(res){
     var statusEl=document.getElementById("abbonamentoStatus");
     var btnM=document.getElementById("btnAbbonatiMensile");
     var btnA=document.getElementById("btnAbbonatiAnnuale");
     box.style.display="block";
-    var attivo=res.data&&res.data.attivo;
+    var attivo=res.data&&res.data.length>0&&res.data[0].attivo;
     if(attivo){
-      var scad=res.data.scadenza?new Date(res.data.scadenza).toLocaleDateString("it-IT"):"";
-      if(statusEl)statusEl.innerHTML="✨ Abbonamento "+(res.data.piano||"")+" attivo<br>fino al "+scad;
+      var scad=res.data[0].scadenza?new Date(res.data[0].scadenza).toLocaleDateString("it-IT"):"";
+      if(statusEl)statusEl.innerHTML="✨ Abbonamento "+(res.data[0].piano||"")+" attivo<br>fino al "+scad;
       if(btnM)btnM.style.display="none";
       if(btnA)btnA.style.display="none";
     } else {
