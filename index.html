@@ -563,7 +563,7 @@ function renderBanda(){
 document.addEventListener("click",function(e){
   if(e.target.closest("#btnAbbonatiMensile")){avviaCheckout("mensile");}
     if(e.target.closest("#btnAbbonatiAnnuale")){avviaCheckout("annuale");}
-    if(e.target.closest("#openRaccolta")){renderRaccolta();$("raccolta").classList.add("show");if(window._sb){window._sb.auth.getSession().then(function(r){if(window._aggiornaBanner)window._aggiornaBanner(r.data.session);});}}
+    if(e.target.closest("#openRaccolta")){renderRaccolta();$("raccolta").classList.add("show");if(window._sb){window._sb.auth.getSession().then(function(r){if(window._aggiornaBanner)window._aggiornaBanner(r.data.session);if(r.data.session&&r.data.session.user){mostraStatoAbbonamento(r.data.session.user);}});}}
   if(e.target.closest("#closeRaccolta")){$("raccolta").classList.remove("show");updateCount();}
   if(e.target.closest("#openBanda")){renderBanda();$("banda").classList.add("show");}
   if(e.target.closest("#closeBanda")){$("banda").classList.remove("show");}
