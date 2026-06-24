@@ -659,8 +659,10 @@ function aggiornaBanner(session){
 function mostraStatoAbbonamento(user){
   var sb=window._sb;
   var box=document.getElementById("abbonamentoBox");
+  console.log("FDF abbonamento: box=",box,"sb=",!!sb,"user=",user&&user.id);
   if(!sb||!box)return;
   sb.from("abbonamenti").select("*").eq("user_id",user.id).then(function(res){
+    console.log("FDF abbonamento res:",res);
     var statusEl=document.getElementById("abbonamentoStatus");
     var btnM=document.getElementById("btnAbbonatiMensile");
     var btnA=document.getElementById("btnAbbonatiAnnuale");
