@@ -378,6 +378,8 @@ function eseguiSalva(){
       sb.auth.getSession().then(function(r){
         if(r.data.session&&r.data.session.user){
           var uid=r.data.session.user.id;
+          var email=r.data.session.user.email;
+          if(isAdmin(email)){_eseguiSalvaCore(fav);return;}
           sb.from("favole").select("id",{count:"exact"}).eq("user_id",uid).then(function(res){
             var n=(res.data&&res.data.length)||0;
             if(n>=5){
